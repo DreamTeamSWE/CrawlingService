@@ -1,5 +1,5 @@
-from Crawler import Crawler
-from InternalRepository import InternalRepository
+from crawler.Crawler import Crawler
+from repository.InternalRepository import InternalRepository
 
 class Facade:
     def start_crawling():
