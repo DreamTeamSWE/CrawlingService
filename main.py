@@ -3,8 +3,10 @@ from repository.DatabaseHandler import DatabaseHandler
 import boto3
 import json
 
-cl = Crawler()
-cl.login_from_cookies()
-x = cl.get_public_following_list('francesco.erre')
+from repository.InternalRepository import InternalRepository
 
-print(x)
+x = InternalRepository()
+
+a = x.select_location('prova',42,42)
+
+print(a[0])

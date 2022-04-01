@@ -28,19 +28,19 @@ class Crawler:
         json_content = json.loads(file_content)
         self.__cl = Client(json_content)
         print ('login successful!')
+
     def get_id_from_username (self, username: str):
         return self.__cl.user_id_from_username(username)
 
-    def get_public_following_list (self, username: str) -> list[str]:
+    def get_public_following_list(self, username: str) -> list[str]:
         id = self.get_id_from_username(username)
         following = self.__cl.user_following_v1(id)
-        following_list = []
-        for users in following:
-            if not (users.is_private):
-                following_list.append(users.username)
-        return following_list
+        return [users.username for users in following if not (users.is_private)]
 
-    def get_media (self, username: str, amount: int = 0):
+    def get_media(self, username: str, amount: int = 0):
         id = self.get_id_from_username(username)
-        medias = self.__cl.user_medias_v1(id, amount)
-        return medias
+        return self.__cl.user_medias_v1(id, amount)
+
+    def get_detailed_location(self, loc_name, lat, lng):
+        place = self.__cl.fbsearch_places(loc_name, lat, lng)[0]
+        return self.__cl.location_info_v1(place.pk)

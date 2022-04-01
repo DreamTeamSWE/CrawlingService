@@ -6,3 +6,8 @@ class Location:
         self.__category = category #categoria della location
         self.__phone = phone #numero di telefono della location
         self.__website = website #sito web della location
+    def is_restaurant(self) -> bool:
+        resaurant_tags = ['Restaurant', 'Bar', 'Grocery ', 'Wine'] #da aggiungere se ne troviamo altri
+        for tag in resaurant_tags:
+            if tag in self.__category: return True
+        return False
