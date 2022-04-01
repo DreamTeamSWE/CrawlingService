@@ -2,6 +2,7 @@ from http import client
 from instagrapi import Client
 from instagrapi.exceptions import (ClientError)
 import json
+import boto3
 
 class Crawler:
 
@@ -10,9 +11,9 @@ class Crawler:
 
     def login_from_account (self, username: str, password: str):
         try:
-            print("Login in progress...")
+            print("login in progress...")
             self.__cl.login(username, password)
-            print("Login crawler Successful!!")
+            print("login crawler successful!!")
         except (ClientError):
             print('an error occoured during log in')
 
@@ -20,8 +21,13 @@ class Crawler:
         json.dump(self.__cl.get_settings(), open('cookie.json', 'w'))
 
     def login_from_cookies (self):
-        self.__cl = Client(json.load(open('cookie.json')))
-
+        print('login from cookies...')
+        s3 = boto3.client(service_name = 's3')
+        content_object = s3.get_object(Bucket = 'sweeat-crawler-cookies', Key = 'DreamTeamUnipd.txt')
+        file_content = content_object['Body'].read().decode('utf-8')
+        json_content = json.loads(file_content)
+        self.__cl = Client(json_content)
+        print ('login successful!')
     def get_id_from_username (self, username: str):
         return self.__cl.user_id_from_username(username)
 
