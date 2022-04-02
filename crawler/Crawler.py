@@ -24,7 +24,7 @@ class Crawler:
     def login_from_cookies(self):
         print('login from cookies...')
         s3 = boto3.client(service_name='s3')
-        content_object = s3.get_object(Bucket='sweeat-crawler-cookies', Key='DreamTeamUnipd.txt')
+        content_object = s3.get_object(Bucket='sweeat-crawler-cookies', Key='instaswe2021.txt')
         file_content = content_object['Body'].read().decode('utf-8')
         json_content = json.loads(file_content)
         self.__cl = Client(json_content)

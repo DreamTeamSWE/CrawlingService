@@ -2,8 +2,8 @@ import json
 
 
 class Location:
-    def __init__(self, locationName, lat, lng, category, phone, website, db_id = None) -> None:
-        self.__location_name = locationName  # nome della location del post
+    def __init__(self, location_name, lat, lng, category, phone, website, db_id = None) -> None:
+        self.__location_name = location_name  # nome della location del post
         self.__lat = round(lat, 4)  # latitudine della location del post
         self.__lng = round(lng, 4)  # longitudine della location del post
         self.__category = category #categoria della location
@@ -46,7 +46,7 @@ class Location:
 
     def to_json(self) -> str:
         json_obj = {
-            "locationName": self.__locationName,
+            "locationName": self.__location_name,
             "lat": self.__lat,
             "lng": self.__lng,
             "category": self.__category,

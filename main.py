@@ -8,9 +8,9 @@ import json
 
 from repository.InternalRepository import InternalRepository
 
-# x = Facade()
+x = Facade()
 
-# x.start_crawling()
+x.start_crawling()
 
 # c = Crawler()
 # c.login_from_cookies()
@@ -40,7 +40,7 @@ from repository.InternalRepository import InternalRepository
 
 # print(x)
 
-x = InternalRepository()
+# x = InternalRepository()
 
-response = x.save_location(Location('prova4', 44.5601, 11.3543, 'ciao', 'ciao', 'ciao'))
-print(response['generatedFields'][0]['longValue'])
+# response = x.save_location(Location('prova4', 44.5601, 11.3543, 'ciao', 'ciao', 'ciao'))
+# print(response['generatedFields'][0]['longValue'])

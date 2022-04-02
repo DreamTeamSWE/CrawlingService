@@ -39,7 +39,7 @@ class CrawledData:
         json_obj = {
             "username": self.__username,
             "post_id": self.__post_id,
-            "date": self.__date,
+            "date": str(self.__date),
             "img_url": self.__img_url,
             "caption_text": self.__caption_text,
             "location": None if None else self.__location.to_json()
