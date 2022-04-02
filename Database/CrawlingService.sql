@@ -21,7 +21,7 @@ CREATE TABLE location (
 
 CREATE TABLE profilo_instagram (
 	username varchar(30) NOT NULL,
-	data_ultimo_check datetime NULL, /* null se non è mai stato controllato */
+	data_ultimo_check datetime,
 	post_utili int default 0,
 	post_visti int default 0,
 	primary key(username)

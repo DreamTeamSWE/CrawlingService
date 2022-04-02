@@ -16,6 +16,7 @@ class Facade:
 
     
     def __format_media(self, media:Media):
+        is_restaurant = False
         # in teoria instagrapi capisce la categoria senza lat e lng, per ora escludo
         if media.location is None or media.location.name is None or media.location.lat is None or media.location.lng is None:
             self.__print_media_log('no geotag')
@@ -27,7 +28,7 @@ class Facade:
         if len(location_db) == 1:
             if (location_db[0]['is_restaurant'] == True):
                 location = LocationFactory().build_from_db(location_db[0])
-                crawled_data = CrawledDataFactory().build_from_media_and_location(media, location)
+                is_restaurant = True
                 self.__print_media_log('location found in db, restaurant!')
             else:
                 self.__print_media_log('location found in db, not a restaurant')
@@ -38,19 +39,25 @@ class Facade:
             
             if location.is_restaurant():
                 self.__print_media_log('new location, restaurant!')
+                is_restaurant = True
             else: self.__print_media_log(f'new location, not a restaurant -> {location.get_category()}')
-            # save location in both cases
             
-            self.__repository.save_location(location)
-            # crawled_data = CrawledDataFactory().build_from_media_and_location(media, location)
-    
-            # salva nel db
+            # save location in both cases
+            response = self.__repository.save_location(location)
+            location.set_db_id(response['generatedFields'][0]['longValue'])
+
+        # save media
+        if is_restaurant is True:
+            crawled_data = CrawledDataFactory().build_from_media_and_location(media, location)
+            self.__repository.save_crawled_data(crawled_data)
+
+        # salva nel db
 
     def start_crawling(self):
         #devo ancora prendere i profili
         self.__crawler.login_from_cookies() #TODO: #2 gestire errori login 
-        profiles_for_crawling = ['marco_food_details'] #lorenzolinguini, paolo_vizzari, marco_food_details
+        profiles_for_crawling = ['lorenzolinguini'] #lorenzolinguini, paolo_vizzari, marco_food_details
         for profile in profiles_for_crawling:
-            medias = self.__crawler.get_media(profile, 100) #poi da togliere il 10
+            medias = self.__crawler.get_media(profile, 10) #poi da togliere il 10
             for media in medias:
                 self.__format_media(media)

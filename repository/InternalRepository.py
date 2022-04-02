@@ -2,11 +2,20 @@
 from repository.DatabaseHandler import DatabaseHandler
 from crawler.CrawledData import CrawledData
 from crawler.Location import Location
+import requests
+import boto3
 
 class InternalRepository:
 
     def __init__(self) -> None:
         self.__db = DatabaseHandler('crawler_test')
+
+    def __save_img_s3 (self, img_url: str, id_img: int):
+        source_bytes = requests.get(img_url).content
+        s3 = boto3.client('s3')
+        s3.put_object(Body=source_bytes, Bucket='dream-team-img-test',
+                      Key=getattr(id_img + '.jpg'),
+                      ContentType='image/jpg')
 
     def select_location (self, name: str, lat: float, lng:float):
         name_param = {'name':'loc_name', 'value': {'stringValue': name}}
@@ -17,14 +26,25 @@ class InternalRepository:
         return self.__db.do_read_query(query, paramset)
 
     def save_crawled_data (self, data: CrawledData):
-        #save crawled data in db
+        #PRE: location e profilo già salvati nel db
+        #salva crawled data nel db
+        #forse fare un check sul crawler id prima di salvare
         username_param = {'name':'username', 'value': {'stringValue': data.get_username()}}
         post_id_param = {'name':'post_id', 'value': {'stringValue': data.get_post_id()}}
         date_param = {'name':'date', 'value': {'stringValue': data.get_date()}}
         caption_text_param = {'name':'caption_text', 'value': {'stringValue': data.get_caption_text()}}
         id_location_param = {'name':'id_location', 'value': {'longValue': data.get_id_location()}}
         paramset = [username_param, post_id_param, date_param, caption_text_param, id_location_param]
-        return self.__db.do_write_query('insert into post (crawler_id, testo, data_pubb, username_autore, id_location) values (:post_id, :caption_text, :date, :username, :id_location)', paramset)
+        response = self.__db.do_write_query('insert into post (crawler_id, testo, data_pubb, username_autore, id_location) values (:post_id, :caption_text, :date, :username, :id_location)', paramset)
+        db_id = response['generatedFields'][0]['longValue']
+
+        #salvo le foto
+        for img_url in data.get_img_url():
+            db_id_param = {'name':'id_post', 'value': {'longValue': db_id}}
+            response = self.__dowrite_query('insert into photo (post_id) values (:id_post)', [db_id_param])
+            id_photo = response['generatedFields'][0]['longValue']
+            self.__save_img_s3(img_url, id_photo)
+            
 
     def save_location (self, location: Location):
         #salva location nel db

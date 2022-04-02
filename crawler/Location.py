@@ -1,11 +1,12 @@
 class Location:
-    def __init__(self, locationName, lat, lng, category, phone, website) -> None:
+    def __init__(self, locationName, lat, lng, category, phone, website, db_id = None) -> None:
         self.__location_name = locationName  # nome della location del post
         self.__lat = round(lat, 4)  # latitudine della location del post
         self.__lng = round(lng, 4)  # longitudine della location del post
         self.__category = category #categoria della location
         self.__phone = phone #numero di telefono della location
         self.__website = website #sito web della location
+        self.__db_id = db_id #id della location nel db
 
     def is_restaurant(self) -> bool:
         resaurant_tags = ['Restaurant', 'Bar', 'Grocery ', 'Wine', 'Diner', 'Food', 'Meal', 'Breakfast', 'Lunch', 'Dinner', 'Cafe'] #da aggiungere se ne troviamo altri
@@ -30,4 +31,11 @@ class Location:
 
     def get_website(self) -> str:
         return self.__website
+
+    def get_db_id(self) -> int:
+        return self.__db_id
+
+    #setters
+    def set_db_id(self, db_id) -> None:
+        self.__db_id = db_id
     
