@@ -1,3 +1,6 @@
+import json
+
+
 class Location:
     def __init__(self, locationName, lat, lng, category, phone, website) -> None:
         self.__location_name = locationName  # nome della location del post
@@ -31,3 +34,15 @@ class Location:
     def get_website(self) -> str:
         return self.__website
     
+
+
+    def to_json(self) -> str:
+        json_obj = {
+            "locationName": self.__locationName,
+            "lat": self.__lat,
+            "lng": self.__lng,
+            "category": self.__category,
+            "phone": self.__phone,
+            "website": self.__website
+        }
+        return json.dumps(json_obj)
