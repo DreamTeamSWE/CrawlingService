@@ -3,16 +3,20 @@ drop table if exists profilo_instagram;
 drop table if exists post;
 drop table if exists immagine;
 
+
 CREATE TABLE location (
     id int NOT NULL AUTO_INCREMENT,
-	lat float NOT NULL,
-	lng float NOT NULL,
-	loc_name varchar(100) NOT NULL,
+	lat DECIMAL(7,4) NOT NULL,
+	lng DECIMAL(7,4) NOT NULL,
+	loc_name varchar(100) NOT NULL COLLATE utf8_general_ci,
 	category varchar(100) NOT NULL,
 	phone varchar(20),
 	website varchar (2048),
+	is_restaurant boolean NOT NULL,
 	primary key(id),
 	unique (lat, lng, loc_name)
+	
+	
 );
 
 CREATE TABLE profilo_instagram (

@@ -1,16 +1,44 @@
 import boto3
-
+import time
 class DatabaseHandler:
 
-    AWS_KEY = 'AKIARZPP2F6H24B5GXVA'
-    AWS_PSW = 'P61Tdsg5C4mg72PjhPULTFa9dqz0pt5hWRt+K815'
-    AWS_REGION = 'eu-central-1'
-
+    #TODO: #1 gestire quando il db è spento
     def __init__(self, database: str) -> None:
-        self.__rdsData = boto3.client('rds-data', region_name=self.AWS_REGION, aws_access_key_id=self.AWS_KEY, aws_secret_access_key=self.AWS_PSW)
+        self.__rdsData = boto3.client('rds-data')
         self.__cluster_arn = 'arn:aws:rds:eu-central-1:123446374287:cluster:sweeat'
         self.__secret_arn = 'arn:aws:secretsmanager:eu-central-1:123446374287:secret:rds-db-credentials/cluster-AQLMTHUP2LEAFVXYXDMZFEHDR4/admin-5WXjei'
         self.__database = database
+        self.__wait_for_db_on()
+
+    #chehck if db is turned on
+    def __is_db_on (self):
+        response = self.__rdsData.execute_statement(resourceArn = self.__cluster_arn,
+                                      secretArn = self.__secret_arn,
+                                      database = self.__database,
+                                      sql = 'SELECT 1',
+                                      parameters = [],
+                                      includeResultMetadata = True)
+        return response
+
+
+
+    #for two minutes check if db is on
+    def __wait_for_db_on (self):
+        ok = False
+        for i in range (20):
+            response = self.__is_db_on()
+            if response['records'] != []:
+                print('db is on')
+                ok = True
+                break
+            else:
+                print('db is off, i will try again in 20 seconds...')
+                time.sleep(20)
+        if ok is False: print('cannot connect to db, exiting...')
+        
+
+
+
 
     def __parse_result (self, results):
         columns = [column['name'] for column in results['columnMetadata']]

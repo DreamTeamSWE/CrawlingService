@@ -10,3 +10,32 @@ class CrawledData:
         self.__img_url = img_url
         self.__caption_text = caption_text
         self.__location = location
+        self.__id_location = None
+
+    #getters
+    def get_username(self) -> str:
+        return self.__username
+    
+    def get_post_id(self) -> str:
+        return self.__post_id
+    
+    def get_date(self) -> str:
+        return self.__date
+
+    def get_img_url(self) -> list[str]:
+        return self.__img_url
+
+    def get_caption_text(self) -> str:
+        return self.__caption_text
+
+    def get_location(self) -> Location:
+        return self.__location
+
+    def get_id_location(self) -> int:
+        return self.__id_location
+    
+    #setters
+    def set_id_location(self, id_location: int) -> None:
+        self.__id_location = id_location
+
+    

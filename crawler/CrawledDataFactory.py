@@ -1,5 +1,5 @@
 from instagrapi.types import Media, Story
-from CrawledData import CrawledData
+from crawler.CrawledData import CrawledData
 from instagrapi import Client
 from crawler.Location import Location
 

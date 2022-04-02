@@ -38,9 +38,16 @@ class Crawler:
         return [users.username for users in following if not (users.is_private)]
 
     def get_media(self, username: str, amount: int = 0):
+        print('scraping medias...')
         id = self.get_id_from_username(username)
-        return self.__cl.user_medias_v1(id, amount)
+        media = self.__cl.user_medias_v1(id, amount)
+        print('medias scraped successfully!')
+        return media
 
     def get_detailed_location(self, loc_name, lat, lng):
         place = self.__cl.fbsearch_places(loc_name, lat, lng)[0]
-        return self.__cl.location_info_v1(place.pk)
+        info = self.__cl.location_info_v1(place.pk)
+        info.name = loc_name
+        info.lat = lat
+        info.lng = lng
+        return info
