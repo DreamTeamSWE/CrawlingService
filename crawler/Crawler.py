@@ -4,12 +4,13 @@ from instagrapi.exceptions import (ClientError)
 import json
 import boto3
 
+
 class Crawler:
 
     def __init__(self) -> None:
         self.__cl = Client()
 
-    def login_from_account (self, username: str, password: str):
+    def login_from_account(self, username: str, password: str):
         try:
             print("login in progress...")
             self.__cl.login(username, password)
@@ -17,19 +18,19 @@ class Crawler:
         except (ClientError):
             print('an error occoured during log in')
 
-    def save_cookies (self):
+    def save_cookies(self):
         json.dump(self.__cl.get_settings(), open('cookie.json', 'w'))
 
-    def login_from_cookies (self):
+    def login_from_cookies(self):
         print('login from cookies...')
-        s3 = boto3.client(service_name = 's3')
-        content_object = s3.get_object(Bucket = 'sweeat-crawler-cookies', Key = 'instaswe2021.txt')
+        s3 = boto3.client(service_name='s3')
+        content_object = s3.get_object(Bucket='sweeat-crawler-cookies', Key='DreamTeamUnipd.txt')
         file_content = content_object['Body'].read().decode('utf-8')
         json_content = json.loads(file_content)
         self.__cl = Client(json_content)
-        print ('login successful!')
+        print('login successful!')
 
-    def get_id_from_username (self, username: str):
+    def get_id_from_username(self, username: str):
         return self.__cl.user_id_from_username(username)
 
     def get_public_following_list(self, username: str) -> list[str]:
