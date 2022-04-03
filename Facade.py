@@ -1,6 +1,8 @@
-from msilib.schema import Media
+from instagrapi.types import Media
+from crawler.CrawledData import CrawledData
 from crawler.CrawledDataFactory import CrawledDataFactory
 from crawler.Crawler import Crawler
+from repository.InternalRepository import InternalRepository
 from crawler.LocationFactory import LocationFactory
 from repository.InternalRepository import InternalRepository
 from repository.SQSHandler import SQSHandler
@@ -62,6 +64,6 @@ class Facade:
         self.__crawler.login_from_cookies()  # TODO: #2 gestire errori login
         profiles_for_crawling = ['lorenzolinguini']  # lorenzolinguini, paolo_vizzari, marco_food_details, estilo_ramy
         for profile in profiles_for_crawling:
-            medias = self.__crawler.get_media(profile, 2)  # poi da togliere il 10
+            medias = self.__crawler.get_media(profile, 2) #poi da togliere il 10
             for media in medias:
                 self.__format_media(media)
