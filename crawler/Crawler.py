@@ -43,11 +43,6 @@ class Crawler:
     def get_id_from_username(self, username: str):
         return self.__cl.user_id_from_username(username)
 
-    def get_public_following_list(self, username: str) -> List[str]:
-        user_instagrapi_id = self.get_id_from_username(username)
-        following = self.__cl.user_following_v1(user_instagrapi_id)
-        return [users.username for users in following if not users.is_private]
-
     def get_media(self, username: str, amount: int = 0):
         print('scraping medias...')
         user_instagrapi_id = self.get_id_from_username(username)
@@ -63,3 +58,8 @@ class Crawler:
         info.lng = lng
         self.__emulate_human_behaviour()
         return info
+
+    def get_public_following_list(self, username: str) -> List[str]:
+        user_instagrapi_id = self.get_id_from_username(username)
+        following = self.__cl.user_following_v1(user_instagrapi_id)
+        return [users.username for users in following if not users.is_private]
