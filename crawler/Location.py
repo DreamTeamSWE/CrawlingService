@@ -2,19 +2,21 @@ import json
 
 
 class Location:
-    def __init__(self, location_name, lat, lng, category, phone, website, db_id = None) -> None:
+    def __init__(self, location_name, lat, lng, category, phone, website, db_id=None) -> None:
         self.__location_name = location_name  # nome della location del post
         self.__lat = round(lat, 4)  # latitudine della location del post
         self.__lng = round(lng, 4)  # longitudine della location del post
-        self.__category = category #categoria della location
-        self.__phone = phone #numero di telefono della location
-        self.__website = website #sito web della location
-        self.__db_id = db_id #id della location nel db
+        self.__category = category  # categoria della location
+        self.__phone = phone  # numero di telefono della location
+        self.__website = website  # sito web della location
+        self.__db_id = db_id  # id della location nel db
 
     def is_restaurant(self) -> bool:
-        resaurant_tags = ['Restaurant', 'Bar', 'Grocery ', 'Wine', 'Diner', 'Food', 'Meal', 'Breakfast', 'Lunch', 'Dinner', 'Cafe', 'Tea Room', 'Hotel'] #da aggiungere se ne troviamo altri
-        for tag in resaurant_tags:
-            if tag in self.__category: return True
+        restaurant_tags = ['Restaurant', 'Bar', 'Grocery ', 'Wine', 'Diner', 'Food', 'Meal', 'Breakfast', 'Lunch',
+                           'Dinner', 'Cafe', 'Tea Room', 'Hotel']  # da aggiungere se ne troviamo altri
+        for tag in restaurant_tags:
+            if tag in self.__category:
+                return True
         return False
 
     def get_location_name(self) -> str:
@@ -28,7 +30,7 @@ class Location:
 
     def get_category(self) -> str:
         return self.__category
-    
+
     def get_phone(self) -> str:
         return self.__phone
 
@@ -38,11 +40,9 @@ class Location:
     def get_db_id(self) -> int:
         return self.__db_id
 
-    #setters
+    # setters
     def set_db_id(self, db_id) -> None:
         self.__db_id = db_id
-    
-
 
     def to_json(self) -> str:
         json_obj = {

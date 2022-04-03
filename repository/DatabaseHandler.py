@@ -9,7 +9,7 @@ class DatabaseHandler:
         self.__rdsData = boto3.client('rds-data')
         self.__cluster_arn = 'arn:aws:rds:eu-central-1:123446374287:cluster:sweeat'
         self.__secret_arn = 'arn:aws:secretsmanager:eu-central-1:123446374287:secret:rds-db-credentials/cluster' \
-                            '-AQLMTHUP2LEAFVXYXDMZFEHDR4/admin-5WXjei '
+                            '-AQLMTHUP2LEAFVXYXDMZFEHDR4/admin-5WXjei'
         self.__database = database
         self.__wait_for_db_on()
 
