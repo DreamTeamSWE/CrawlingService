@@ -12,7 +12,7 @@ class Location:
         self.__db_id = db_id #id della location nel db
 
     def is_restaurant(self) -> bool:
-        resaurant_tags = ['Restaurant', 'Bar', 'Grocery ', 'Wine', 'Diner', 'Food', 'Meal', 'Breakfast', 'Lunch', 'Dinner', 'Cafe'] #da aggiungere se ne troviamo altri
+        resaurant_tags = ['Restaurant', 'Bar', 'Grocery ', 'Wine', 'Diner', 'Food', 'Meal', 'Breakfast', 'Lunch', 'Dinner', 'Cafe', 'Tea Room', 'Hotel'] #da aggiungere se ne troviamo altri
         for tag in resaurant_tags:
             if tag in self.__category: return True
         return False

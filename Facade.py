@@ -49,8 +49,9 @@ class Facade:
 
         # save media
         if is_restaurant is True:
+            pass
             crawled_data = CrawledDataFactory().build_from_media_and_location(media, location)
-            #self.__repository.save_crawled_data(crawled_data)
+            self.__repository.save_crawled_data(crawled_data)
             #enqueue crawled data
             sqs = SQSHandler('coda-crawler.fifo')
             sqs.enqueue_message(crawled_data)
@@ -58,8 +59,8 @@ class Facade:
     def start_crawling(self):
         #devo ancora prendere i profili
         self.__crawler.login_from_cookies() #TODO: #2 gestire errori login 
-        profiles_for_crawling = ['lorenzolinguini'] #lorenzolinguini, paolo_vizzari, marco_food_details
+        profiles_for_crawling = ['lorenzolinguini'] #lorenzolinguini, paolo_vizzari, marco_food_details, estilo_ramy
         for profile in profiles_for_crawling:
-            medias = self.__crawler.get_media(profile, 5) #poi da togliere il 10
+            medias = self.__crawler.get_media(profile, 2) #poi da togliere il 10
             for media in medias:
                 self.__format_media(media)

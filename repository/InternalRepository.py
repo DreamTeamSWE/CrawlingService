@@ -14,7 +14,7 @@ class InternalRepository:
         source_bytes = requests.get(img_url).content
         s3 = boto3.client('s3')
         s3.put_object(Body=source_bytes, Bucket='dream-team-img-test',
-                      Key=getattr(id_img + '.jpg'),
+                      Key=str(id_img + '.jpg'),
                       ContentType='image/jpg')
 
     def select_location (self, name: str, lat: float, lng:float):
@@ -31,7 +31,7 @@ class InternalRepository:
         #forse fare un check sul crawler id prima di salvare
         username_param = {'name':'username', 'value': {'stringValue': data.get_username()}}
         post_id_param = {'name':'post_id', 'value': {'stringValue': data.get_post_id()}}
-        date_param = {'name':'date', 'value': {'stringValue': data.get_date()}}
+        date_param = {'name':'date', 'value': {'stringValue': data.get_date()}, 'typeHint': 'TIMESTAMP'}
         caption_text_param = {'name':'caption_text', 'value': {'stringValue': data.get_caption_text()}}
         id_location_param = {'name':'id_location', 'value': {'longValue': data.get_id_location()}}
         paramset = [username_param, post_id_param, date_param, caption_text_param, id_location_param]
@@ -41,9 +41,10 @@ class InternalRepository:
         #salvo le foto
         for img_url in data.get_img_url():
             db_id_param = {'name':'id_post', 'value': {'longValue': db_id}}
-            response = self.__dowrite_query('insert into photo (post_id) values (:id_post)', [db_id_param])
+            response = self.__db.do_write_query('insert into immagine (post_id) values (:id_post)', [db_id_param])
             id_photo = response['generatedFields'][0]['longValue']
             self.__save_img_s3(img_url, id_photo)
+            data.add_s3_id(id_photo)
             
 
     def save_location (self, location: Location):

@@ -3,6 +3,7 @@ drop table if exists profilo_instagram;
 drop table if exists post;
 drop table if exists immagine;
 
+/* CREATE DATABASE database_name DEFAULT CHARSET = utf8mb4 DEFAULT COLLATE = utf8mb4_unicode_ci; */
 
 CREATE TABLE location (
     id int NOT NULL AUTO_INCREMENT,
@@ -27,6 +28,8 @@ CREATE TABLE profilo_instagram (
 	primary key(username)
 );
 
+/* gestire emoji: https://stackoverflow.com/questions/39463134/how-to-store-emoji-character-in-mysql-database */
+
 CREATE TABLE post (
 	id int NOT NULL AUTO_INCREMENT,  /* da vedere se usare quello builtin del post */
     crawler_id varchar (50) NOT NULL unique,
@@ -42,12 +45,13 @@ CREATE TABLE post (
         on update cascade
         on delete cascade,
 	primary key(id)
-);
+) /* DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci; */;
 
+/* TODO: #3 delete cascade non va*/
 CREATE TABLE immagine (
     id int NOT NULL AUTO_INCREMENT,
     post_id int NOT NULL
-		references post (crawler_id)
+		references post (id)
 		on update cascade
 		on delete cascade,
     primary key (id)

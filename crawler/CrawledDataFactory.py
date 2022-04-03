@@ -20,7 +20,7 @@ class CrawledDataFactory:
     def build_from_media_and_location(self, media: Media, location: Location):
         username = media.user.username
         post_id = media.id
-        date = media.taken_at
+        date = media.taken_at.strftime("%Y-%m-%d %H:%M:%S")
         caption_text = media.caption_text
         img_urls = []
         if media.media_type == 1: #il media è una foto

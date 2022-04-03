@@ -3,12 +3,19 @@ from instagrapi import Client
 from instagrapi.exceptions import (ClientError)
 import json
 import boto3
+import random
+import time
 
 
 class Crawler:
 
     def __init__(self) -> None:
         self.__cl = Client()
+
+    def __emulate_human_behaviour(self):
+        x = random.uniform(5, 10)
+        print(f'emulating human behaviour: waiting {x} seconds...')
+        time.sleep(x)
 
     def login_from_account(self, username: str, password: str):
         try:
@@ -51,4 +58,5 @@ class Crawler:
         info.name = loc_name
         info.lat = lat
         info.lng = lng
+        self.__emulate_human_behaviour()
         return info
