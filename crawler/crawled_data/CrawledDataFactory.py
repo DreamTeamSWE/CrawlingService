@@ -1,7 +1,7 @@
 from instagrapi.types import Media, Story
 
-from crawler.CrawledData import CrawledData
-from crawler.Location import Location
+from crawler.crawled_data.CrawledData import CrawledData
+from crawler.location.Location import Location
 
 
 class CrawledDataFactory:

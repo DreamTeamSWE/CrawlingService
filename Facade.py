@@ -1,7 +1,7 @@
 from msilib.schema import Media
-from crawler.CrawledDataFactory import CrawledDataFactory
+from crawler.crawled_data.CrawledDataFactory import CrawledDataFactory
 from crawler.Crawler import Crawler
-from crawler.LocationFactory import LocationFactory
+from crawler.location.LocationFactory import LocationFactory
 from repository.InternalRepository import InternalRepository
 from repository.SQSHandler import SQSHandler
 

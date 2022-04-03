@@ -1,15 +1,4 @@
-from multiprocessing.connection import wait
-from Facade import Facade
-from crawler.Crawler import Crawler
-from crawler.LocationFactory import LocationFactory
-from repository.DatabaseHandler import DatabaseHandler
-from crawler.Location import Location
-import boto3
-import json
-import random
-import time
 import datetime
-from repository.InternalRepository import InternalRepository
 
 # x = Facade()
 
@@ -45,7 +34,7 @@ from repository.InternalRepository import InternalRepository
 
 # x = InternalRepository()
 
-# response = x.save_location(Location('prova4', 44.5601, 11.3543, 'ciao', 'ciao', 'ciao'))
+# response = x.save_location(location('prova4', 44.5601, 11.3543, 'ciao', 'ciao', 'ciao'))
 # print(response['generatedFields'][0]['longValue'])
 
 #random float beetwen 5 and 10

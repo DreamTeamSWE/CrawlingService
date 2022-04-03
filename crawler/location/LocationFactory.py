@@ -1,4 +1,4 @@
-from crawler.Location import Location
+from crawler.location.Location import Location
 from instagrapi.types import Location as InstagrapiLocation
 
 

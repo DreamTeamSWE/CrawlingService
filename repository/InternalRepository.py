@@ -1,7 +1,7 @@
 # from crawler.CrawledData import CrawledData
 from repository.DatabaseHandler import DatabaseHandler
-from crawler.CrawledData import CrawledData
-from crawler.Location import Location
+from crawler.crawled_data.CrawledData import CrawledData
+from crawler.location.Location import Location
 import requests
 import boto3
 
@@ -30,7 +30,7 @@ class InternalRepository:
     def save_crawled_data(self, data: CrawledData):
         # PRE: location e profilo già salvati nel db
         # salva crawled data nel db
-        # forse fare un check sul crawler id prima di salvare
+        # TODO: #4 fare check su crawler_id prima di salvare
         username_param = {'name': 'username', 'value': {'stringValue': data.get_username()}}
         post_id_param = {'name': 'post_id', 'value': {'stringValue': data.get_post_id()}}
         date_param = {'name': 'date', 'value': {'stringValue': data.get_date()}, 'typeHint': 'TIMESTAMP'}

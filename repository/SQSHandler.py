@@ -2,7 +2,7 @@ import uuid
 
 import boto3
 
-from crawler.CrawledData import CrawledData
+from crawler.crawled_data.CrawledData import CrawledData
 
 
 class SQSHandler:

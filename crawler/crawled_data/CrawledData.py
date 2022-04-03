@@ -1,6 +1,6 @@
 import json
 
-from crawler.Location import Location
+from crawler.location.Location import Location
 
 
 class CrawledData:
