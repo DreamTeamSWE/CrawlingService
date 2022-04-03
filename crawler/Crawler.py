@@ -1,4 +1,4 @@
-from http import client
+
 from instagrapi import Client
 from instagrapi.exceptions import (ClientError)
 import json
@@ -12,7 +12,8 @@ class Crawler:
     def __init__(self) -> None:
         self.__cl = Client()
 
-    def __emulate_human_behaviour(self):
+    @staticmethod
+    def __emulate_human_behaviour():
         x = random.uniform(5, 10)
         print(f'emulating human behaviour: waiting {x} seconds...')
         time.sleep(x)
@@ -22,7 +23,7 @@ class Crawler:
             print("login in progress...")
             self.__cl.login(username, password)
             print("login crawler successful!!")
-        except (ClientError):
+        except ClientError:
             print('an error occoured during log in')
 
     def save_cookies(self):
@@ -41,14 +42,14 @@ class Crawler:
         return self.__cl.user_id_from_username(username)
 
     def get_public_following_list(self, username: str) -> list[str]:
-        id = self.get_id_from_username(username)
-        following = self.__cl.user_following_v1(id)
-        return [users.username for users in following if not (users.is_private)]
+        user_instagrapi_id = self.get_id_from_username(username)
+        following = self.__cl.user_following_v1(user_instagrapi_id)
+        return [users.username for users in following if not users.is_private]
 
     def get_media(self, username: str, amount: int = 0):
         print('scraping medias...')
-        id = self.get_id_from_username(username)
-        media = self.__cl.user_medias_v1(id, amount)
+        user_instagrapi_id = self.get_id_from_username(username)
+        media = self.__cl.user_medias_v1(int(user_instagrapi_id), amount)
         print('medias scraped successfully!')
         return media
 

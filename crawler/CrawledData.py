@@ -1,7 +1,7 @@
 import json
 
-from instagrapi.types import Media
 from crawler.Location import Location
+
 
 class CrawledData:
 
@@ -15,13 +15,13 @@ class CrawledData:
         self.__location = location
         self.__s3_id = []
 
-    #getters
+    # getters
     def get_username(self) -> str:
         return self.__username
-    
+
     def get_post_id(self) -> str:
         return self.__post_id
-    
+
     def get_date(self) -> str:
         return str(self.__date)
 
@@ -34,7 +34,7 @@ class CrawledData:
     def get_location(self) -> Location:
         return self.__location
 
-    def get_s3_id(self) -> str:
+    def get_s3_id(self) -> list[str]:
         return self.__s3_id
 
     def get_id_location(self) -> int:
@@ -53,5 +53,3 @@ class CrawledData:
             "location": None if None else self.__location.to_json()
         }
         return json.dumps(json_obj)
-
-

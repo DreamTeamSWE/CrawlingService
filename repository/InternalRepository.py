@@ -14,7 +14,7 @@ class InternalRepository:
         source_bytes = requests.get(img_url).content
         s3 = boto3.client('s3')
         s3.put_object(Body=source_bytes, Bucket='dream-team-img-test',
-                      Key=str(id_img + '.jpg'),
+                      Key=str(id_img) + '.jpg',
                       ContentType='image/jpg')
 
     def select_location (self, name: str, lat: float, lng:float):
