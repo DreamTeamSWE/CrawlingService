@@ -1,4 +1,4 @@
-from msilib.schema import Media
+from instagrapi.types import Media
 from crawler.crawled_data.CrawledDataFactory import CrawledDataFactory
 from crawler.Crawler import Crawler
 from crawler.location.LocationFactory import LocationFactory
