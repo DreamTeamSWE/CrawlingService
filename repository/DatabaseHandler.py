@@ -1,6 +1,8 @@
 import boto3
 import time
 
+from botocore.exceptions import ClientError
+
 
 class DatabaseHandler:
 
@@ -14,29 +16,36 @@ class DatabaseHandler:
         self.__wait_for_db_on()
 
     # chehck if db is turned on
-    def __is_db_on(self):
-        response = self.__rdsData.execute_statement(resourceArn=self.__cluster_arn,
-                                                    secretArn=self.__secret_arn,
-                                                    database=self.__database,
-                                                    sql='SELECT 1',
-                                                    parameters=[],
-                                                    includeResultMetadata=True)
-        return response
+    def __is_db_on(self, delay) -> bool:
+        try:
+            response = self.__rdsData.execute_statement(resourceArn=self.__cluster_arn,
+                                                        secretArn=self.__secret_arn,
+                                                        database=self.__database,
+                                                        sql='SELECT 1',
+                                                        parameters=[],
+                                                        includeResultMetadata=True)
+            return True
+        except ClientError as ce:
+            error_code = ce.response.get("Error").get('Code')
+            error_msg = ce.response.get("Error").get('Message')
+
+            # Aurora serverless is waking up
+            if error_code == 'BadRequestException' and 'Communications link failure' in error_msg:
+                print('Sleeping ' + str(delay) + ' secs, waiting DB connection')
+                time.sleep(delay)
+                return False
+            else:
+                raise ce
 
     # for two minutes check if db is on
     def __wait_for_db_on(self):
-        ok = False
         for i in range(20):
-            response = self.__is_db_on()
-            if response['records']:
-                print('db is on')
-                ok = True
-                break
-            else:
-                print('db is off, i will try again in 20 seconds...')
-                time.sleep(20)
+            ok = self.__is_db_on(10)
+            if ok is True:
+                print('DB is on')
+                return
         if ok is False:
-            print('cannot connect to db, exiting...')
+            print('cannot connect to DB')
 
     @staticmethod
     def __parse_result(results):
