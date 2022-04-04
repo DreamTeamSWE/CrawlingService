@@ -1,6 +1,6 @@
 
 from instagrapi import Client
-from instagrapi.exceptions import (ClientError)
+import instagrapi.exceptions
 import json
 import boto3
 import random
@@ -25,7 +25,7 @@ class Crawler:
             print("login in progress...")
             self.__cl.login(username, password)
             print("login crawler successful!!")
-        except ClientError:
+        except instagrapi.exceptions.ClientError:
             print('an error occoured during log in')
 
     def save_cookies(self):
@@ -58,6 +58,17 @@ class Crawler:
         info.lng = lng
         self.__emulate_human_behaviour()
         return info
+
+    def does_profile_exists(self, username: str) -> bool:
+        try:
+            self.get_id_from_username(username)
+            return True
+        except instagrapi.exceptions.UserNotFound:
+            return False
+
+    def is_profile_private(self, username: str) -> bool:
+        user_instagrapi = self.__cl.user_info_by_username(username)
+        return user_instagrapi.is_private
 
     def get_public_following_list(self, username: str) -> List[str]:
         user_instagrapi_id = self.get_id_from_username(username)

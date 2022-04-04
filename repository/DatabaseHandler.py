@@ -6,7 +6,6 @@ from botocore.exceptions import ClientError
 
 class DatabaseHandler:
 
-    # TODO: #1 gestire quando il db è spento
     def __init__(self, database: str) -> None:
         self.__rdsData = boto3.client('rds-data')
         self.__cluster_arn = 'arn:aws:rds:eu-central-1:123446374287:cluster:sweeat'
@@ -18,12 +17,12 @@ class DatabaseHandler:
     # chehck if db is turned on
     def __is_db_on(self, delay) -> bool:
         try:
-            response = self.__rdsData.execute_statement(resourceArn=self.__cluster_arn,
-                                                        secretArn=self.__secret_arn,
-                                                        database=self.__database,
-                                                        sql='SELECT 1',
-                                                        parameters=[],
-                                                        includeResultMetadata=True)
+            self.__rdsData.execute_statement(resourceArn=self.__cluster_arn,
+                                             secretArn=self.__secret_arn,
+                                             database=self.__database,
+                                             sql='SELECT 1',
+                                             parameters=[],
+                                             includeResultMetadata=True)
             return True
         except ClientError as ce:
             error_code = ce.response.get("Error").get('Code')
@@ -39,6 +38,7 @@ class DatabaseHandler:
 
     # for two minutes check if db is on
     def __wait_for_db_on(self):
+        ok = False
         for i in range(20):
             ok = self.__is_db_on(10)
             if ok is True:

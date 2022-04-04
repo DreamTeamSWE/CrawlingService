@@ -1,3 +1,9 @@
-from repository.DatabaseHandler import DatabaseHandler
+import instagrapi.exceptions
 
-x = DatabaseHandler('crawler_test')
+from crawler.Crawler import Crawler
+from repository.DatabaseHandler import DatabaseHandler
+from crawler.profiles.FacadeAddProfile import FacadeAddProfile
+
+facade = FacadeAddProfile('fuckitsjaq')
+x = facade.add_profile()
+print(f'exit code: {x}')
