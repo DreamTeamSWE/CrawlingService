@@ -51,13 +51,18 @@ class Crawler:
         return media
 
     def get_detailed_location(self, loc_name, lat, lng):
-        place = self.__cl.fbsearch_places(loc_name, lat, lng)[0]
-        info = self.__cl.location_info_v1(place.pk)
-        info.name = loc_name
-        info.lat = lat
-        info.lng = lng
-        self.__emulate_human_behaviour()
-        return info
+        response = self.__cl.fbsearch_places(loc_name, lat, lng)
+        if len(response) > 0:
+            place = response[0]
+            info = self.__cl.location_info_v1(place.pk)
+            info.name = loc_name
+            info.lat = lat
+            info.lng = lng
+            self.__emulate_human_behaviour()
+            return info
+        else:
+            self.__emulate_human_behaviour()
+            return None
 
     def does_profile_exists(self, username: str) -> bool:
         try:

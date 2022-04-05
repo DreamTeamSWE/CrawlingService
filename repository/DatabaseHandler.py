@@ -60,25 +60,54 @@ class DatabaseHandler:
             parsed_records.append(parsed_record)
         return parsed_records
 
-    # param_set format: https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/rds-data.html#RDSDataService.Client.execute_statement
-    def do_write_query(self, query: str, param_set=None):
-        if param_set is None:
-            param_set = []
-        response = self.__rdsData.execute_statement(resourceArn=self.__cluster_arn,
+    def begin_transaction(self):
+        response = self.__rdsData.begin_transaction(resourceArn=self.__cluster_arn,
                                                     secretArn=self.__secret_arn,
-                                                    database=self.__database,
-                                                    sql=query,
-                                                    parameters=param_set)
+                                                    database=self.__database)
+        return response['transactionId']
+
+    def commit_transaction(self, transaction_id):
+        response = self.__rdsData.commit_transaction(resourceArn=self.__cluster_arn,
+                                                     secretArn=self.__secret_arn,
+                                                     transactionId=transaction_id)
         return response
 
     # param_set format: https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/rds-data.html#RDSDataService.Client.execute_statement
-    def do_read_query(self, query: str, param_set=None):
+    def do_write_query(self, query: str, param_set=None, transaction_id=None):
         if param_set is None:
             param_set = []
-        response = self.__rdsData.execute_statement(resourceArn=self.__cluster_arn,
-                                                    secretArn=self.__secret_arn,
-                                                    database=self.__database,
-                                                    sql=query,
-                                                    parameters=param_set,
-                                                    includeResultMetadata=True)
+        if transaction_id is not None:
+            response = self.__rdsData.execute_statement(resourceArn=self.__cluster_arn,
+                                                        secretArn=self.__secret_arn,
+                                                        database=self.__database,
+                                                        sql=query,
+                                                        parameters=param_set,
+                                                        transactionId=transaction_id)
+        else:
+            response = self.__rdsData.execute_statement(resourceArn=self.__cluster_arn,
+                                                        secretArn=self.__secret_arn,
+                                                        database=self.__database,
+                                                        sql=query,
+                                                        parameters=param_set)
+        return response
+
+    # param_set format: https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/rds-data.html#RDSDataService.Client.execute_statement
+    def do_read_query(self, query: str, param_set=None, transaction_id=None):
+        if param_set is None:
+            param_set = []
+        if transaction_id is not None:
+            response = self.__rdsData.execute_statement(resourceArn=self.__cluster_arn,
+                                                        secretArn=self.__secret_arn,
+                                                        database=self.__database,
+                                                        sql=query,
+                                                        parameters=param_set,
+                                                        includeResultMetadata=True,
+                                                        transactionId=transaction_id)
+        else:
+            response = self.__rdsData.execute_statement(resourceArn=self.__cluster_arn,
+                                                        secretArn=self.__secret_arn,
+                                                        database=self.__database,
+                                                        sql=query,
+                                                        parameters=param_set,
+                                                        includeResultMetadata=True)
         return self.__parse_result(response)

@@ -25,6 +25,7 @@ CREATE TABLE profilo_instagram (
 	data_ultimo_check datetime,
 	post_utili int default 0,
 	post_visti int default 0,
+	level int default 2,
 	primary key(username)
 );
 

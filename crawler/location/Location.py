@@ -13,7 +13,7 @@ class Location:
 
     def is_restaurant(self) -> bool:
         restaurant_tags = ['Restaurant', 'Bar', 'Grocery ', 'Wine', 'Diner', 'Food', 'Meal', 'Breakfast', 'Lunch',
-                           'Dinner', 'Cafe', 'Tea Room', 'Hotel']  # da aggiungere se ne troviamo altri
+                           'Dinner', 'Cafe', 'Tea Room', 'Hotel', 'Pizza', 'Coffee', 'Bakery']  # da aggiungere se ne troviamo altri
         for tag in restaurant_tags:
             if tag in self.__category:
                 return True
