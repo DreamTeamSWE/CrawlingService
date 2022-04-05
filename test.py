@@ -1,5 +1,5 @@
 from time import sleep
-
+import time
 import instagrapi.exceptions
 
 from crawler.Crawler import Crawler
@@ -23,6 +23,11 @@ from crawler.profiles.FacadeAddProfile import FacadeAddProfile
 # print(resp)
 from repository.ProfilesRepository import ProfilesRepository
 
-x = ProfilesRepository()
+start = time.time()
 
-x.update_post_profile('lorenzolinguini', 5, 5)
+x = ProfilesRepository()
+profiles = ['marco_food_details', 'estilo_ramy', 'diariodibrodo', 'flo_barone', 'blueshukin', 'matteofavaro']
+for profile in profiles:
+    x.insert_profile(profile)
+
+# print(f'execution time: minutes: {int((time.time() - start) / 60)} and seconds: {int((time.time() - start) % 60)}')
