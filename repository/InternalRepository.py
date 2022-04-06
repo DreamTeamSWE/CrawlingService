@@ -27,10 +27,19 @@ class InternalRepository:
         query = 'select * from location where lat = :lat and lng = :lng and loc_name = :loc_name'
         return self.__db.do_read_query(query, paramset)
 
-    def save_crawled_data(self, data: CrawledData):
+    def check_if_post_already_saved(self, crawler_id: str) -> bool:
+        crawler_id_param = {'name': 'crawler_id', 'value': {'stringValue': crawler_id}}
+        paramset = [crawler_id_param]
+        query = 'select * from post where crawler_id = :crawler_id'
+        response = self.__db.do_read_query(query, paramset)
+        return len(response) == 1
+
+    def save_crawled_data(self, data: CrawledData) -> int:
         # PRE: location e profilo già salvati nel db
         # salva crawled data nel db
-        # TODO: #4 fare check su crawler_id prima di salvare
+        if self.check_if_post_already_saved(data.get_post_id()):
+            print('warning: you are scraping a post that is already saved, skipping')
+            return -1
         username_param = {'name': 'username', 'value': {'stringValue': data.get_username()}}
         post_id_param = {'name': 'post_id', 'value': {'stringValue': data.get_post_id()}}
         date_param = {'name': 'date', 'value': {'stringValue': data.get_date()}, 'typeHint': 'TIMESTAMP'}
@@ -49,6 +58,8 @@ class InternalRepository:
             id_photo = response['generatedFields'][0]['longValue']
             self.__save_img_s3(img_url, id_photo)
             data.add_s3_id(id_photo)
+
+        return 0
 
     def save_location(self, location: Location):
         # salva location nel db

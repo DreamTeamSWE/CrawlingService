@@ -16,7 +16,7 @@ class Crawler:
 
     @staticmethod
     def __emulate_human_behaviour():
-        x = random.uniform(5, 10)
+        x = random.uniform(5, 15)
         print(f'emulating human behaviour: waiting {x} seconds...')
         time.sleep(x)
 

@@ -49,7 +49,6 @@ CREATE TABLE post (
         on delete cascade
 ) DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;
 
-/* TODO: #3 delete cascade non va*/
 CREATE TABLE immagine (
     id int NOT NULL AUTO_INCREMENT,
     post_id int NOT NULL,
