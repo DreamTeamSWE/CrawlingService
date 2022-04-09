@@ -63,9 +63,11 @@ class Facade:
     def start_crawling(self):
         # devo ancora prendere i profili
         self.__crawler.login_from_cookies()  # TODO: #2 gestire errori login
-        # lorenzolinguini, paolo_vizzari, marco_food_details, estilo_ramy, diariodibrodo, flo_barone, blueshukin, matteofavaro, oggiindirettada
-        profiles_for_crawling = ['oggiindirettada'] # profilo da fare
+        # lorenzolinguini, paolo_vizzari, marco_food_details, estilo_ramy, diariodibrodo, flo_barone, blueshukin,
+        # matteofavaro, oggiindirettada, burroandalici, direttortonelli, lukasessa, ivan.manetti, ireneguidobaldi,
+        # lorenzo.costa17
+        profiles_for_crawling = ['lorenzolinguini']
         for profile in profiles_for_crawling:
-            medias = self.__crawler.get_media(profile, 3)  # poi da togliere il 10
+            medias = self.__crawler.get_media(profile, 3)  # amount sarebbe da calcolare in base all'ultimo check
             for media in medias:
                 self.__format_media(media)

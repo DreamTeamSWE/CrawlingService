@@ -1,33 +1,51 @@
-from time import sleep
-import time
-import instagrapi.exceptions
+import unittest
+from crawler.location.Location import Location
 
-from crawler.Crawler import Crawler
-from repository.DatabaseHandler import DatabaseHandler
-from crawler.profiles.FacadeAddProfile import FacadeAddProfile
 
-# facade = FacadeAddProfile('lorenzolinguini')
-# x = facade.add_profile()
-# print(f'exit code: {x}')
+class TestLocation(unittest.TestCase):
+    def test_location_is_restaurant(self):
+        location = Location('location_name', 43.3, 12.2134, 'Italian Restaurant', '1234567890', 'http://www.google.com')
+        location2 = Location('location_name', 43.3, 12.2134, 'City', '1234567890', 'http://www.google.com')
+        self.assertTrue(location.is_restaurant())
+        self.assertFalse(location2.is_restaurant())
 
-# x = DatabaseHandler('crawler_test')
-# transaction_id = x.begin_transaction()
-# response = x.do_read_query('SELECT * FROM profilo_instagram where level = 1', transaction_id=transaction_id)[0]['post_visti']
-# print('sleeping...')
-# sleep(60)
-# response = int(response) + 1
-# x.do_write_query(f"UPDATE profilo_instagram SET post_visti = {response}  where level = 1", transaction_id=transaction_id)
-# x.commit_transaction(transaction_id)
+    def test_get_location_name(self):
+        location = Location('location_name', 43.3, 12.2134, 'Italian Restaurant', '1234567890', 'http://www.google.com')
+        self.assertEqual(location.get_location_name(), 'location_name')
 
-# resp = x.do_write_query('UPDATE profilo_instagram SET post_visti = post_visti + 1  where level = 1')
-# print(resp)
-from repository.ProfilesRepository import ProfilesRepository
+    def test_get_lat(self):
+        location = Location('location_name', 43.3, 12.2134, 'Italian Restaurant', '1234567890', 'http://www.google.com')
+        self.assertEqual(location.get_lat(), 43.3)
 
-start = time.time()
+    def test_get_lng(self):
+        location = Location('location_name', 43.3, 12.2134, 'Italian Restaurant', '1234567890', 'http://www.google.com')
+        self.assertEqual(location.get_lng(), 12.2134)
 
-x = ProfilesRepository()
-profiles = ['marco_food_details', 'estilo_ramy', 'diariodibrodo', 'flo_barone', 'blueshukin', 'matteofavaro']
-for profile in profiles:
-    x.insert_profile(profile)
+    def test_get_category(self):
+        location = Location('location_name', 43.3, 12.2134, 'Italian Restaurant', '1234567890', 'http://www.google.com')
+        self.assertEqual(location.get_category(), 'Italian Restaurant')
 
-# print(f'execution time: minutes: {int((time.time() - start) / 60)} and seconds: {int((time.time() - start) % 60)}')
+    def test_get_phone(self):
+        location = Location('location_name', 43.3, 12.2134, 'Italian Restaurant', '1234567890', 'http://www.google.com')
+        self.assertEqual(location.get_phone(), '1234567890')
+
+    def test_get_website(self):
+        location = Location('location_name', 43.3, 12.2134, 'Italian Restaurant', '1234567890', 'http://www.google.com')
+        self.assertEqual(location.get_website(), 'http://www.google.com')
+
+    def test_get_db_id(self):
+        location = Location('location_name', 43.3, 12.2134, 'Italian Restaurant', '1234567890', 'http://www.google.com', 1)
+        self.assertEqual(location.get_db_id(), 1)
+
+    def test_set_db_id(self):
+        location = Location('location_name', 43.3, 12.2134, 'Italian Restaurant', '1234567890', 'http://www.google.com')
+        location.set_db_id(1)
+        self.assertEqual(location.get_db_id(), 1)
+
+    def test_to_dict(self):
+        location = Location('location_name', 43.3, 12.2134, 'Italian Restaurant', '1234567890', 'http://www.google.com')
+        self.assertEqual(location.to_dict(), {'location_name': 'location_name', 'lat': 43.3, 'lng': 12.2134, 'category': 'Italian Restaurant', 'phone': '1234567890', 'website': 'http://www.google.com'})
+
+
+if __name__ == '__main__':
+    unittest.main()

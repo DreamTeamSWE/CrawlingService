@@ -1,6 +1,3 @@
-import json
-
-
 class Location:
     def __init__(self, location_name, lat, lng, category, phone, website, db_id=None) -> None:
         self.__location_name = location_name  # nome della location del post
@@ -13,7 +10,7 @@ class Location:
 
     def is_restaurant(self) -> bool:
         restaurant_tags = ['Restaurant', 'Bar', 'Grocery ', 'Wine', 'Diner', 'Food', 'Meal', 'Breakfast', 'Lunch',
-                           'Dinner', 'Cafe', 'Tea Room', 'Hotel', 'Pizza', 'Coffee', 'Bakery']  # da aggiungere se ne troviamo altri
+                           'Dinner', 'Cafe', 'Tea Room', 'Hotel', 'Pizza', 'Coffee', 'Bakery', 'Dessert', 'Gastropub']  # da aggiungere se ne troviamo altri
         for tag in restaurant_tags:
             if tag in self.__category:
                 return True
@@ -43,9 +40,8 @@ class Location:
     #setters
     def set_db_id(self, db_id) -> None:
         self.__db_id = db_id
-    
 
-    def to_dict(self) -> str:
+    def to_dict(self) -> dict:
         json_obj = {
             "location_name": self.__location_name,
             "lat": self.__lat,

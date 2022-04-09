@@ -43,21 +43,16 @@ class ProfilesRepository:
 
     def update_post_profile(self, username: str, post_viewed: int, post_useful: int):
         """
-                update a profile by adding the amount of posts viewed and useful
+        update a profile by adding the amount of posts viewed and useful.
 
-                Parameters
-                ----------
-                username: str
-                    Unique identifier for a location
-                post_viewed: int
-                    Amount of posts viewed to add
-                post_useful: int
-                    Amount of posts useful to add
-
-                Returns
-                -------
-                dict
-                    Response from the database
+        :type username: str
+        :param username: Unique identifier for a location
+        :type post_viewed: int
+        :param post_viewed: Amount of posts viewed to add
+        :type post_useful: int
+        :param post_useful: Amount of posts useful to add
+        :rtype dict
+        :returns Response from the database
         """
         username_param = {'name': 'username', 'value': {'stringValue': username}}
         post_visti_param = {'name': 'post_viewed', 'value': {'longValue': post_viewed}}
