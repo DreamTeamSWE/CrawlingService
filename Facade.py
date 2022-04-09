@@ -3,14 +3,31 @@ from crawler.crawled_data.CrawledDataFactory import CrawledDataFactory
 from crawler.Crawler import Crawler
 from crawler.location.LocationFactory import LocationFactory
 from repository.InternalRepository import InternalRepository
+from repository.ProfilesRepository import ProfilesRepository
 from repository.SQSHandler import SQSHandler
+from crawler.profiles.ProfileFactory import ProfileFactory
+from crawler.profiles.ProfileForCrawling import ProfileForCrawling
+from datetime import datetime
 
 
 class Facade:
     def __init__(self) -> None:
         self.__crawler = Crawler()
         self.__repository = InternalRepository()
+        self.__profile_repository = ProfilesRepository()
         self.__log_counter = 0
+
+    @staticmethod
+    def __get_amount_to_crawl(profile: ProfileForCrawling):
+        if profile.get_last_time_checked() is None:
+            return 48
+        last_check = profile.get_last_time_checked()
+        today = datetime.now()
+        diff = (today - last_check).days
+        if diff >= 48:
+            return 48
+        else:
+            return diff + 1
 
     def __print_media_log(self, message: str):
         print(f'media {self.__log_counter}: {message}')
@@ -61,13 +78,8 @@ class Facade:
                 sqs.enqueue_message(crawled_data)
 
     def start_crawling(self):
-        # devo ancora prendere i profili
         self.__crawler.login_from_cookies()  # TODO: #2 gestire errori login
-        # lorenzolinguini, paolo_vizzari, marco_food_details, estilo_ramy, diariodibrodo, flo_barone, blueshukin,
-        # matteofavaro, oggiindirettada, burroandalici, direttortonelli, lukasessa, ivan.manetti, ireneguidobaldi,
-        # lorenzo.costa17
-        profiles_for_crawling = ['lorenzolinguini']
-        for profile in profiles_for_crawling:
-            medias = self.__crawler.get_media(profile, 3)  # amount sarebbe da calcolare in base all'ultimo check
-            for media in medias:
-                self.__format_media(media)
+        profile_for_crawling = ProfileFactory().build_from_db(self.__profile_repository.get_profile_for_crawling_level_1()[0])
+        medias = self.__crawler.get_media(profile_for_crawling.get_username(), self.__get_amount_to_crawl(profile_for_crawling))
+        for media in medias:
+            self.__format_media(media)

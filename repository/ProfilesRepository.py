@@ -7,6 +7,12 @@ class ProfilesRepository:
     def __init__(self) -> None:
         self.__db = DatabaseHandler('crawler_test')
 
+    def __update_last_time_check(self, username: str):
+        username_param = {'name': 'username', 'value': {'stringValue': username}}
+        query = 'update profilo_instagram set data_ultimo_check = current_timestamp where username = :username'
+        paramset = [username_param]
+        return self.__db.do_write_query(query, paramset)
+
     def select_profile(self, username: str):
         username_param = {'name': 'username', 'value': {'stringValue': username}}
         query = 'select * from profilo_instagram where username = :username'
@@ -30,16 +36,13 @@ class ProfilesRepository:
         query = query[:-2]
         return self.__db.do_write_query(query, paramset)
 
-    def get_profiles_for_crawling_all_levels(self, amount):
+    def get_profile_for_crawling_level_1(self):
         # TODO: da sistemare, capire come evitare dirty read
-        amount_param = {'name': 'amount', 'value': {'longValue': amount}}
-        query = 'select * from profilo_instagram order by data_ultimo_check limit :amount'
-        paramset = [amount_param]
-        response = self.__db.do_read_query(query, paramset)
-        profiles = []
-        for x in response:
-            profiles.append(x['username'])
-        return profiles
+        query = 'select * from profilo_instagram where level = 1 order by data_ultimo_check, username limit 1'
+        response = self.__db.do_read_query(query)
+        profile = response[0]['username']
+        self.__update_last_time_check(profile)
+        return response
 
     def update_post_profile(self, username: str, post_viewed: int, post_useful: int):
         """

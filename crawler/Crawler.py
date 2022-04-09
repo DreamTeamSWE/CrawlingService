@@ -44,7 +44,7 @@ class Crawler:
         return self.__cl.user_id_from_username(username)
 
     def get_media(self, username: str, amount: int = 0):
-        print('scraping medias...')
+        print(f'scraping {amount} medias from {username}...')
         user_instagrapi_id = self.get_id_from_username(username)
         media = self.__cl.user_medias_v1(int(user_instagrapi_id), amount)
         print('medias scraped successfully!')

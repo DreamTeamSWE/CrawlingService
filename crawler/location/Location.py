@@ -37,7 +37,7 @@ class Location:
     def get_db_id(self) -> int:
         return self.__db_id
 
-    #setters
+    # setters
     def set_db_id(self, db_id) -> None:
         self.__db_id = db_id
 

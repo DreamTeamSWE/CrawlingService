@@ -11,7 +11,7 @@ CREATE TABLE location (
 	lng DECIMAL(7,4) NOT NULL,
 	loc_name varchar(100) NOT NULL COLLATE utf8_general_ci,
 	category varchar(100) NOT NULL,
-	phone varchar(20),
+	phone varchar(50),
 	website varchar (2048),
 	is_restaurant boolean NOT NULL,
 	primary key(id),

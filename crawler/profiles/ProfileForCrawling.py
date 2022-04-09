@@ -1,7 +1,13 @@
+from datetime import datetime
+
+
 class ProfileForCrawling:
-    def __init__(self, username, last_time_checked=None, viewed_posts=0, usefull_posts=0):
+    def __init__(self, username, last_time_checked: str = None, viewed_posts=0, usefull_posts=0):
         self.__username = username
-        self.__last_time_checked = last_time_checked
+        if last_time_checked is None:
+            self.__last_time_checked = None
+        else:
+            self.__last_time_checked = datetime.strptime(last_time_checked, '%Y-%m-%d %H:%M:%S')
         self.__viewed_posts = viewed_posts
         self.__usefull_posts = usefull_posts
 
