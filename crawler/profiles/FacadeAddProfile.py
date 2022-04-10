@@ -1,5 +1,6 @@
 from repository.ProfilesRepository import ProfilesRepository
 from crawler.Crawler import Crawler
+import logging
 
 
 class FacadeAddProfile:
@@ -24,28 +25,28 @@ class FacadeAddProfile:
 
         # check if the profile is already in the database
         if len(self.__repository.select_profile(self.__profile)) != 0:
-            print("Profile already in database")
+            logging.info("Profile already in database")
             return 1
 
         # check if exists
         crawler = Crawler()
         crawler.login_from_cookies()
         if crawler.does_profile_exists(self.__profile) is False:
-            print("Profile does not exist")
+            logging.info("Profile does not exist")
             return 2
 
         # check if private
         if crawler.is_profile_private(self.__profile):
-            print("Profile is private")
+            logging.info("Profile is private")
             return 3
 
         # add the profile to the database
         self.__repository.insert_profile(self.__profile)
-        print(f'Profile {self.__profile} added to the database')
+        logging.info(f'Profile {self.__profile} added to the database')
 
         # add all the followings of the profile
         followings = crawler.get_public_following_list(self.__profile)
         self.__repository.insert_profiles_list(followings)
-        print(f'Followings of {self.__profile} added to the database')
+        logging.info(f'Followings of {self.__profile} added to the database')
 
         return 0

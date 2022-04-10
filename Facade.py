@@ -8,6 +8,7 @@ from repository.SQSHandler import SQSHandler
 from crawler.profiles.ProfileFactory import ProfileFactory
 from crawler.profiles.ProfileForCrawling import ProfileForCrawling
 from datetime import datetime
+import logging
 
 
 class Facade:
@@ -15,7 +16,7 @@ class Facade:
         self.__crawler = Crawler()
         self.__repository = InternalRepository()
         self.__profile_repository = ProfilesRepository()
-        self.__log_counter = 0
+        self.__log_counter = 1
 
     @staticmethod
     def __get_amount_to_crawl(profile: ProfileForCrawling):
@@ -30,15 +31,15 @@ class Facade:
             return diff + 1
 
     def __print_media_log(self, message: str):
-        print(f'media {self.__log_counter}: {message}')
+        logging.info(f'media {self.__log_counter}: {message}')
         self.__log_counter += 1
 
-    def __format_media(self, media: Media):
+    def __format_media(self, media: Media, username: str) -> bool:
         is_restaurant = False
         # in teoria instagrapi capisce la categoria senza lat e lng, per ora escludo
         if media.location is None or media.location.name is None or media.location.lat is None or media.location.lng is None:
             self.__print_media_log('no geotag')
-            return
+            return False
         location_name = media.location.name
         location_lat = round(media.location.lat, 4)
         location_lng = round(media.location.lng, 4)
@@ -50,12 +51,12 @@ class Facade:
                 self.__print_media_log('location found in db, restaurant!')
             else:
                 self.__print_media_log('location found in db, not a restaurant')
-                return
+                return False
         else:
             instagrapi_location = self.__crawler.get_detailed_location(location_name, location_lat, location_lng)
             if instagrapi_location is None:
                 self.__print_media_log('fbsearch cannot find location')
-                return
+                return False
             location = LocationFactory().build_from_instagrapi_location(instagrapi_location)
 
             if location.is_restaurant():
@@ -70,16 +71,22 @@ class Facade:
 
         # save media
         if is_restaurant is True:
-            crawled_data = CrawledDataFactory().build_from_media_and_location(media, location)
+            crawled_data = CrawledDataFactory().build_from_media_location_and_username(media, location, username)
             status = self.__repository.save_crawled_data(crawled_data)
             # enqueue crawled data
             if status == 0:
                 sqs = SQSHandler('coda-crawler.fifo')
                 sqs.enqueue_message(crawled_data)
+        return True
 
     def start_crawling(self):
         self.__crawler.login_from_cookies()  # TODO: #2 gestire errori login
         profile_for_crawling = ProfileFactory().build_from_db(self.__profile_repository.get_profile_for_crawling_level_1()[0])
-        medias = self.__crawler.get_media(profile_for_crawling.get_username(), self.__get_amount_to_crawl(profile_for_crawling))
+        amount_to_crawl = self.__get_amount_to_crawl(profile_for_crawling)
+        medias = self.__crawler.get_media(profile_for_crawling.get_username(), amount_to_crawl)
+        useful_post = 0
         for media in medias:
-            self.__format_media(media)
+            if self.__format_media(media, profile_for_crawling.get_username()) is True:
+                useful_post += 1
+        self.__profile_repository.update_post_profile(profile_for_crawling.get_username(), amount_to_crawl, useful_post)
+        logging.info(f'crawling from {profile_for_crawling.get_username()} finished: {amount_to_crawl} posts crawled, {useful_post} useful posts')

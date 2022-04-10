@@ -32,6 +32,11 @@ class CrawledDataFactory:
             img_urls.extend(resource.thumbnail_url for resource in media.resources)
         return CrawledData(username, post_id, date, img_urls, caption_text, location)
 
+    def build_from_media_location_and_username(self, media: Media, location: Location, username: str):
+        crawled_data = self.build_from_media_and_location(media, location)
+        crawled_data.set_username(username)
+        return crawled_data
+
     def build_from_story(self, story: Story):
         pass
 

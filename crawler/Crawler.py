@@ -5,6 +5,8 @@ import json
 import boto3
 import random
 import time
+import logging
+
 
 from typing import List
 
@@ -17,37 +19,37 @@ class Crawler:
     @staticmethod
     def __emulate_human_behaviour():
         x = random.uniform(5, 15)
-        print(f'emulating human behaviour: waiting {round(x,1)} seconds...')
+        logging.info(f'emulating human behaviour: waiting {round(x,1)} seconds...')
         time.sleep(x)
 
     def login_from_account(self, username: str, password: str):
         try:
-            print("login in progress...")
+            logging.info("login in progress...")
             self.__cl.login(username, password)
-            print("login crawler successful!!")
+            logging.info("login crawler successful!!")
         except instagrapi.exceptions.ClientError:
-            print('an error occoured during log in')
+            logging.info('an error occoured during log in')
 
     def save_cookies(self):
         json.dump(self.__cl.get_settings(), open('cookie.json', 'w'))
 
     def login_from_cookies(self):
-        print('login from cookies...')
+        logging.info('login from cookies...')
         s3 = boto3.client(service_name='s3')
         content_object = s3.get_object(Bucket='sweeat-crawler-cookies', Key='instaswe2021.txt')
         file_content = content_object['Body'].read().decode('utf-8')
         json_content = json.loads(file_content)
         self.__cl = Client(json_content)
-        print('login successful!')
+        logging.info('login successful!')
 
     def get_id_from_username(self, username: str):
         return self.__cl.user_id_from_username(username)
 
     def get_media(self, username: str, amount: int = 0):
-        print(f'scraping {amount} medias from {username}...')
+        logging.info(f'scraping {amount} medias from {username}...')
         user_instagrapi_id = self.get_id_from_username(username)
         media = self.__cl.user_medias_v1(int(user_instagrapi_id), amount)
-        print('medias scraped successfully!')
+        logging.info('medias scraped successfully!')
         return media
 
     def get_detailed_location(self, loc_name, lat, lng):

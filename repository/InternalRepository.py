@@ -4,6 +4,7 @@ from crawler.crawled_data.CrawledData import CrawledData
 from crawler.location.Location import Location
 import requests
 import boto3
+import logging
 
 
 class InternalRepository:
@@ -38,7 +39,7 @@ class InternalRepository:
         # PRE: location e profilo già salvati nel db
         # salva crawled data nel db
         if self.check_if_post_already_saved(data.get_post_id()):
-            print('warning: you are scraping a post that is already saved, skipping')
+            logging.info('warning: you are scraping a post that is already saved, skipping')
             return -1
         username_param = {'name': 'username', 'value': {'stringValue': data.get_username()}}
         post_id_param = {'name': 'post_id', 'value': {'stringValue': data.get_post_id()}}

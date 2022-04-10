@@ -43,6 +43,10 @@ class CrawledData:
     def get_id_location(self) -> int:
         return self.__location.get_db_id()
 
+    # setters
+    def set_username(self, username: str) -> None:
+        self.__username = username
+
     def add_s3_id(self, s3_id: str) -> None:
         self.__s3_id.append(s3_id)
 

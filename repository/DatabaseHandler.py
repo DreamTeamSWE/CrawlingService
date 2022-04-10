@@ -1,6 +1,6 @@
 import boto3
 import time
-
+import logging
 from botocore.exceptions import ClientError
 
 
@@ -30,7 +30,7 @@ class DatabaseHandler:
 
             # Aurora serverless is waking up
             if error_code == 'BadRequestException' and 'Communications link failure' in error_msg:
-                print('Sleeping ' + str(delay) + ' secs, waiting DB connection')
+                logging.info('Sleeping ' + str(delay) + ' secs, waiting DB connection')
                 time.sleep(delay)
                 return False
             else:
@@ -42,10 +42,10 @@ class DatabaseHandler:
         for i in range(20):
             ok = self.__is_db_on(10)
             if ok is True:
-                print('DB is on')
+                logging.info('DB is on')
                 return
         if ok is False:
-            print('cannot connect to DB')
+            logging.info('cannot connect to DB')
 
     @staticmethod
     def __parse_result(results):
