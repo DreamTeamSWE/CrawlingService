@@ -1,21 +1,16 @@
-from repository.DatabaseHandler import DatabaseHandler
+import logging
 from repository.ProfilesRepository import ProfilesRepository
-from crawler.profiles.ProfileFactory import ProfileFactory
-from datetime import datetime
+from crawler.profiles.FacadeAddProfile import FacadeAddProfile
 
-# prof = ProfilesRepository()
-# x = prof.select_profile('blueshukin')
-# ls = x[0]['data_ultimo_check']
-# ls = '2018-12-01 00:00:00'
-# ls = datetime.strptime(ls, '%Y-%m-%d %H:%M:%S')
-# now = datetime.now()
-#
-# print(ls)
-# print(now)
-# # #days of difference beetwen current time and last check
-# diff = (now - ls).days
-# print(diff)
 
-db = ProfilesRepository()
-for i in range (10):
-    db.get_profile_for_crawling_level_1()
+def prove():
+    logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
+    # f = FacadeAddProfile('')
+    # ret = f.add_profile()
+    # print(ret)
+    r = ProfilesRepository()
+    r.insert_profile('iposticini')
+
+
+if __name__ == '__main__':
+    prove()

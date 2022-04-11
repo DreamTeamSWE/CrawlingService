@@ -13,7 +13,13 @@ class InternalRepository:
         self.__db = DatabaseHandler('crawler_test')
 
     @staticmethod
-    def __save_img_s3(img_url: str, id_img: int):
+    def __save_img_s3(img_url: str, id_img: int) -> None:
+        """
+        Save an image in S3.
+
+        :param img_url: the http/https url of the image
+        :param id_img: the id of the image in the database
+        """
         source_bytes = requests.get(img_url).content
         s3 = boto3.client('s3')
         s3.put_object(Body=source_bytes, Bucket='dream-team-img-test',
@@ -21,6 +27,14 @@ class InternalRepository:
                       ContentType='image/jpg')
 
     def select_location(self, name: str, lat: float, lng: float):
+        """
+        Select a location from the database.
+
+        :param name: the name of the location
+        :param lat: the latitude of the location
+        :param lng: the longitude of the location
+        :return: the parsed response from the database
+        """
         name_param = {'name': 'loc_name', 'value': {'stringValue': name}}
         lat_param = {'name': 'lat', 'value': {'doubleValue': lat}}
         lng_param = {'name': 'lng', 'value': {'doubleValue': lng}}
@@ -29,6 +43,12 @@ class InternalRepository:
         return self.__db.do_read_query(query, paramset)
 
     def check_if_post_already_saved(self, crawler_id: str) -> bool:
+        """
+        Check if a post is already saved in the database.
+
+        :param crawler_id: the id of the post given by instagrapi
+        :return: True if the post is already saved, False otherwise
+        """
         crawler_id_param = {'name': 'crawler_id', 'value': {'stringValue': crawler_id}}
         paramset = [crawler_id_param]
         query = 'select * from post where crawler_id = :crawler_id'
@@ -36,8 +56,15 @@ class InternalRepository:
         return len(response) == 1
 
     def save_crawled_data(self, data: CrawledData) -> int:
-        # PRE: location e profilo già salvati nel db
-        # salva crawled data nel db
+        """
+        Save a CrawledData object in the database.
+        PRECONDITION: the location and the profile must be saved in the database before.
+
+        :param data: the CrawledData object to save
+        :return: 0 if the CrawledData object is saved correctly, -1 otherwise
+        """
+
+        # saving CrawledData object
         if self.check_if_post_already_saved(data.get_post_id()):
             logging.info('warning: you are scraping a post that is already saved, skipping')
             return -1
@@ -52,7 +79,7 @@ class InternalRepository:
             paramset)
         db_id = response['generatedFields'][0]['longValue']
 
-        # salvo le foto
+        # saving images
         for img_url in data.get_img_url():
             db_id_param = {'name': 'id_post', 'value': {'longValue': db_id}}
             response = self.__db.do_write_query('insert into immagine (post_id) values (:id_post)', [db_id_param])
@@ -63,7 +90,12 @@ class InternalRepository:
         return 0
 
     def save_location(self, location: Location):
-        # salva location nel db
+        """
+        Save a Location object in the database.
+
+        :param location: the Location object to save in the database
+        :return: the response from the database
+        """
         name_param = {'name': 'loc_name', 'value': {'stringValue': location.get_location_name()}}
         lat_param = {'name': 'lat', 'value': {'doubleValue': location.get_lat()}}
         lng_param = {'name': 'lng', 'value': {'doubleValue': location.get_lng()}}

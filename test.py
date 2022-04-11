@@ -4,7 +4,7 @@ from crawler.location.Location import Location
 
 class TestLocation(unittest.TestCase):
     def test_location_is_restaurant(self):
-        location = Location('location_name', 43.3, 12.2134, 'Italian Restaurant', '1234567890', 'http://www.google.com')
+        location = Location('location_name', 43.3, 12.2134, 'fast food', '1234567890', 'http://www.google.com')
         location2 = Location('location_name', 43.3, 12.2134, 'City', '1234567890', 'http://www.google.com')
         self.assertTrue(location.is_restaurant())
         self.assertFalse(location2.is_restaurant())

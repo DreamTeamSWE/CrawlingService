@@ -14,6 +14,12 @@ class SQSHandler:
         self.__group_id = uuid.uuid4()
 
     def enqueue_message(self, crawled_data_obj: CrawledData) -> dict:
+        """
+        Enqueues a message to the SQS queue.
+
+        :param crawled_data_obj: CrawledData object to be enqueued.
+        :return: SQS response.
+        """
         response = self.__sqs_client.send_message(QueueUrl=self.__queue_url,
                                                   MessageBody=crawled_data_obj.to_json(),
                                                   MessageGroupId=str(self.__group_id))

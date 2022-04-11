@@ -20,6 +20,12 @@ class Facade:
 
     @staticmethod
     def __get_amount_to_crawl(profile: ProfileForCrawling):
+        """
+        Calculates the amount of media to crawl for a given profile, based on the last time the profile was crawled
+
+        :param profile: ProfileForCrawling object to calculate the amount of media to crawl
+        :return: int amount of media to crawl beetween 1 and 48
+        """
         if profile.get_last_time_checked() is None:
             return 48
         last_check = profile.get_last_time_checked()
@@ -30,11 +36,23 @@ class Facade:
         else:
             return diff + 1
 
-    def __print_media_log(self, message: str):
+    def __print_media_log(self, message: str) -> None:
+        """
+        Prints a log message for the current media and increments the log counter
+
+        :param message: string message to print
+        """
         logging.info(f'media {self.__log_counter}: {message}')
         self.__log_counter += 1
 
     def __format_media(self, media: Media, username: str) -> bool:
+        """
+        Formats a media object to be stored in the database
+
+        :param media: Media object to format
+        :param username: string username of the profile that the media belongs to
+        :return: bool True if the media is useful, False otherwise
+        """
         is_restaurant = False
         # in teoria instagrapi capisce la categoria senza lat e lng, per ora escludo
         if media.location is None or media.location.name is None or media.location.lat is None or media.location.lng is None:
@@ -77,9 +95,14 @@ class Facade:
             if status == 0:
                 sqs = SQSHandler('coda-crawler.fifo')
                 sqs.enqueue_message(crawled_data)
-        return True
+            return True
+        return False
 
-    def start_crawling(self):
+    def start_crawling(self) -> None:
+        """
+        Facade method to start the crawling process, it will crawl the profile in the database that has not been crawled
+        for the longest time.
+        """
         self.__crawler.login_from_cookies()  # TODO: #2 gestire errori login
         profile_for_crawling = ProfileFactory().build_from_db(self.__profile_repository.get_profile_for_crawling_level_1()[0])
         amount_to_crawl = self.__get_amount_to_crawl(profile_for_crawling)
