@@ -80,7 +80,8 @@ class Crawler:
         logging.info('medias scraped successfully!')
         return media
 
-    def get_detailed_location(self, loc_name, lat, lng):
+    # TODO: tirare eccezione invece che return None
+    def get_detailed_location(self, loc_name, lat, lng) -> instagrapi.types.Location:
         """
         Get more information like website, phone number, etc. of a location. Can return None if the location is not
         found.

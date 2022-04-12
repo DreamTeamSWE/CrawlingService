@@ -80,7 +80,7 @@ class InternalRepository:
         db_id = response['generatedFields'][0]['longValue']
 
         # saving images
-        for img_url in data.get_img_url():
+        for img_url in data.get_img_urls():
             db_id_param = {'name': 'id_post', 'value': {'longValue': db_id}}
             response = self.__db.do_write_query('insert into immagine (post_id) values (:id_post)', [db_id_param])
             id_photo = response['generatedFields'][0]['longValue']

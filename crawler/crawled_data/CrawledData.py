@@ -37,7 +37,7 @@ class CrawledData:
         """
         return str(self.__date)
 
-    def get_img_url(self) -> List[str]:
+    def get_img_urls(self) -> List[str]:
         """
         Get the urls of the images of the media.
         """
