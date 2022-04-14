@@ -38,11 +38,11 @@ class ProfileForCrawling:
 
     # Setters
 
-    def set_last_time_checked(self, last_time_checked):
+    def set_last_time_checked(self, last_time_checked: str):
         """
-        Set the last time the profile was checked
+        Set the last time the profile was checked from a given string in format YYYY-MM-DD HH:MM:SS
         """
-        self.__last_time_checked = last_time_checked
+        self.__last_time_checked = datetime.strptime(last_time_checked, '%Y-%m-%d %H:%M:%S')
 
     def set_viewed_posts(self, viewed_posts):
         """
