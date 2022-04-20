@@ -52,11 +52,15 @@ class Crawler:
         """
         logging.info('login from cookies...')
         s3 = boto3.client(service_name='s3')
-        content_object = s3.get_object(Bucket='sweeat-crawler-cookies', Key='instaswe2021.txt')
+
+        x = random.randint(1, 3)
+        account_name = {1: 'instaswe2021.txt', 2: 'dt-unipd.txt', 3: 'sognoteamswe9.txt'}
+        content_object = s3.get_object(Bucket='sweeat-crawler-cookies', Key=account_name[x])
+
         file_content = content_object['Body'].read().decode('utf-8')
         json_content = json.loads(file_content)
         self.__cl = Client(json_content)
-        logging.info('login successful!')
+        logging.info(f'login successful from {account_name[x]} cookie file!')
 
     def get_id_from_username(self, username: str) -> str:
         """
