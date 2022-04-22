@@ -85,6 +85,7 @@ class Location:
         - category: the category of the location
         - phone: the phone number of the location
         - website: the website url of the location
+        - db_id: the id of the restaurant in the database
 
         :return: a dictionary containing the location's data as explained above
         """
@@ -94,6 +95,7 @@ class Location:
             "lng": self.__lng,
             "category": self.__category,
             "phone": self.__phone,
-            "website": self.__website
+            "website": self.__website,
+            "db_id": self.__db_id
         }
         return json_obj
