@@ -1,6 +1,6 @@
 import json
 
-from instagrapi.types import Media
+
 from typing import List
 
 from crawler.location.Location import Location
@@ -88,7 +88,7 @@ class CrawledData:
             "username": self.__username,
             "post_id": self.__post_id,
             "date": str(self.__date),
-            "img_url": self.__s3_id,
+            "img_url": self.__img_url,
             "caption_text": self.__caption_text,
             "location": self.__location.to_dict() if self.__location is not None else None
         }

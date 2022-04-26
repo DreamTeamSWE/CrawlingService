@@ -66,14 +66,18 @@ class DatabaseHandler:
         :rtype: list
         :return: parsed result
         """
-        columns = [column['name'] for column in results['columnMetadata']]
+        columns = [column['label'] for column in results['columnMetadata']]
         parsed_records = []
         for record in results['records']:
             parsed_record = {}
             for i, cell in enumerate(record):
                 key = columns[i]
                 value = list(cell.values())[0]
-                parsed_record[key] = value
+                key1 = list(cell.keys())[0]
+                if key1 == 'isNull' and value:
+                    parsed_record[key] = None
+                else:
+                    parsed_record[key] = value
             parsed_records.append(parsed_record)
         return parsed_records
 

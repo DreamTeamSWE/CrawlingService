@@ -28,7 +28,6 @@ CREATE TABLE profilo_instagram (
 	level int default 2,
 	primary key(username)
 ) DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;
-
 /* gestire emoji: https://stackoverflow.com/questions/39463134/how-to-store-emoji-character-in-mysql-database */
 
 CREATE TABLE post (
