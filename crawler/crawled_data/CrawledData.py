@@ -88,9 +88,9 @@ class CrawledData:
             "username": self.__username,
             "post_id": self.__post_id,
             "date": str(self.__date),
-            "img_url": self.__img_url,
             "caption_text": self.__caption_text,
-            "location": self.__location.to_dict() if self.__location is not None else None
+            "location": self.__location.to_dict() if self.__location is not None else None,
+            "s3_id": self.__s3_id
         }
         return json.dumps(json_obj)
 
