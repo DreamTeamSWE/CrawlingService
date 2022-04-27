@@ -5,6 +5,8 @@ from crawler.location.Location import Location
 import requests
 import boto3
 import logging
+from PIL import Image
+import io
 
 
 class InternalRepository:
@@ -21,10 +23,18 @@ class InternalRepository:
         :param id_img: the id of the image in the database
         """
         source_bytes = requests.get(img_url).content
+        image = Image.open(io.BytesIO(source_bytes))
+        if image.format == 'WEBP':
+            image.convert("RGB")  # converte in jpeg
+        output = io.BytesIO()
+        image.save(output, format='JPEG')
+        image.close()
         s3 = boto3.client('s3')
-        s3.put_object(Body=source_bytes, Bucket='dream-team-img-test',
+        s3.put_object(Body=output.getvalue(), Bucket='dream-team-img-test',
                       Key=str(id_img) + '.jpg',
                       ContentType='image/jpg')
+        del image
+        del output
 
     def select_location(self, name: str, lat: float, lng: float):
         """

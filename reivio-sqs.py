@@ -3,8 +3,9 @@ from crawler.location.Location import Location
 from repository.DatabaseHandler import DatabaseHandler
 from repository.SQSHandler import SQSHandler
 
-LIMIT_MIN = 0
-LIMIT_MAX = 150
+LIMIT_MIN = 1000
+LIMIT_MAX = 1300
+
 # da 0 a 149 ok
 
 def main():
@@ -29,7 +30,7 @@ def main():
 
         if len(db_data) > 0:
             db_data = db_data[0]
-            print('post id: ' + str(index_id))
+            print('post id: ' + str(index_id) + ' post crawler_id ' + db_data['crawler_id'])
             loc = Location(db_data['loc_name'], float(db_data['loc_lat']), float(db_data['loc_lng']),
                            db_data['loc_cat'],
                            db_data['loc_phone'], db_data['loc_website'], db_data['loc_id'])
@@ -41,8 +42,9 @@ def main():
                 img_urls.append(el['img_id'])
             print(img_urls)
 
-            post = CrawledData(db_data['username_autore'], db_data['crawler_id'], db_data['data_pubb'], img_urls,
+            post = CrawledData(db_data['username_autore'], db_data['crawler_id'], db_data['data_pubb'], [],
                                db_data['testo'], loc)
+            post.get_s3_id(img_urls)
 
             sqs.enqueue_message(post)
             print('----------------------')
