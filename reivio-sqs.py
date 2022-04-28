@@ -4,7 +4,8 @@ from repository.DatabaseHandler import DatabaseHandler
 from repository.SQSHandler import SQSHandler
 
 LIMIT_MIN = 1000
-LIMIT_MAX = 1300
+LIMIT_MAX = 1002
+
 
 # da 0 a 149 ok
 
@@ -17,7 +18,7 @@ def main():
         param = [{"name": "id", "value": {"longValue": index_id}}]
 
         query_post = 'select location.id as "loc_id", location.lat as "loc_lat", location.lng as "loc_lng", ' \
-                     'location.loc_name as "loc_name", location.category as "loc_cat", location.phone as "loc_phone", '\
+                     'location.loc_name as "loc_name", location.category as "loc_cat", location.phone as "loc_phone", ' \
                      'location.website as "loc_website", location.is_restaurant as "loc_is_rest", post.id, ' \
                      'post.crawler_id, post.testo, post.data_pubb, post.username_autore from post ' \
                      'join location ' \
@@ -37,14 +38,12 @@ def main():
 
             db_data_img = db.do_read_query(query_img, param)
 
-            img_urls = []
-            for el in db_data_img:
-                img_urls.append(el['img_id'])
-            print(img_urls)
-
             post = CrawledData(db_data['username_autore'], db_data['crawler_id'], db_data['data_pubb'], [],
                                db_data['testo'], loc)
-            post.get_s3_id(img_urls)
+
+            for el in db_data_img:
+                post.add_s3_id(el['img_id'])
+                print(el['img_id'])
 
             sqs.enqueue_message(post)
             print('----------------------')
