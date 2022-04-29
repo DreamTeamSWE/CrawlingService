@@ -2,7 +2,7 @@ from datetime import datetime
 
 
 class ProfileForCrawling:
-    def __init__(self, username, last_time_checked: str = None, viewed_posts=0, usefull_posts=0):
+    def __init__(self, username: str, last_time_checked: str = None, viewed_posts: int = 0, usefull_posts: int = 0):
         self.__username = username
         if last_time_checked is None:
             self.__last_time_checked = None

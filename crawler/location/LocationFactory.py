@@ -5,7 +5,7 @@ from instagrapi.types import Location as InstagrapiLocation
 class LocationFactory:
 
     @staticmethod
-    def build_from_instagrapi_location(location: InstagrapiLocation):
+    def build_from_instagrapi_location(location: InstagrapiLocation) -> Location:
         """
         Builds a Location object from an Instagrapi.Location object
 
@@ -15,7 +15,7 @@ class LocationFactory:
         return Location(location.name, location.lat, location.lng, location.category, location.phone, location.website)
 
     @staticmethod
-    def build_from_db(db_data: dict):
+    def build_from_db(db_data: dict) -> Location:
         """
         Builds a Location object from a dictionary containing the data from the database obtained by a query like:
         'SELECT * FROM locations WHERE id = ?'.

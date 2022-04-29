@@ -1,8 +1,5 @@
 import json
-
-
 from typing import List
-
 from crawler.location.Location import Location
 
 
@@ -93,5 +90,3 @@ class CrawledData:
             "s3_id": self.__s3_id
         }
         return json.dumps(json_obj)
-
-

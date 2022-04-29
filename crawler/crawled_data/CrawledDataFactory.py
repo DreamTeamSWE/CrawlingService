@@ -1,4 +1,4 @@
-from instagrapi.types import Media, Story
+from instagrapi.types import Media
 
 from crawler.crawled_data.CrawledData import CrawledData
 from crawler.location.Location import Location
@@ -26,7 +26,7 @@ class CrawledDataFactory:
         return CrawledData(username, post_id, date, img_urls, caption_text, location)
 
     @staticmethod
-    def build_from_media_and_location(media: Media, location: Location):
+    def build_from_media_and_location(media: Media, location: Location) -> CrawledData:
         """
         Builds a CrawledData object from an instagrapi media object and a location object, the location attribute of the
         returned object is set to the location object.
@@ -46,7 +46,7 @@ class CrawledDataFactory:
             img_urls.extend(resource.thumbnail_url for resource in media.resources)
         return CrawledData(username, post_id, date, img_urls, caption_text, location)
 
-    def build_from_media_location_and_username(self, media: Media, location: Location, username: str):
+    def build_from_media_location_and_username(self, media: Media, location: Location, username: str) -> CrawledData:
         """
         Builds a CrawledData object from an instagrapi media object, a location object and a username, the location
         attribute of the returned object is set to the location object, the username attribute of the returned object is
@@ -62,8 +62,8 @@ class CrawledDataFactory:
         crawled_data.set_username(username)
         return crawled_data
 
-    def build_from_story(self, story: Story):
-        pass
-
-    def build_from_db(self, db_data: dict):
-        pass
+    # def build_from_story(self, story: Story):
+    #     pass
+    #
+    # def build_from_db(self, db_data: dict):
+    #     pass

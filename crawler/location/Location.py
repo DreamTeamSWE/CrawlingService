@@ -1,5 +1,6 @@
 class Location:
-    def __init__(self, location_name, lat, lng, category, phone, website, db_id=None) -> None:
+    def __init__(self, location_name: str, lat: float, lng: float, category: str, phone: str, website: str,
+                 db_id: int = None) -> None:
         self.__location_name = location_name  # nome della location del post
         self.__lat = round(lat, 4)  # latitudine della location del post
         self.__lng = round(lng, 4)  # longitudine della location del post

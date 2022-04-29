@@ -6,8 +6,7 @@ import boto3
 import random
 import time
 import logging
-
-from typing import List
+from typing import Optional, List
 
 
 class Crawler:
@@ -84,8 +83,7 @@ class Crawler:
         logging.info('medias scraped successfully!')
         return media
 
-    # TODO: tirare eccezione invece che return None
-    def get_detailed_location(self, loc_name, lat, lng) -> instagrapi.types.Location:
+    def get_detailed_location(self, loc_name: str, lat: float, lng:float) -> Optional[instagrapi.types.Location]:
         """
         Get more information like website, phone number, etc. of a location. Can return None if the location is not
         found.
@@ -106,7 +104,6 @@ class Crawler:
             return info
         else:
             self.__emulate_human_behaviour()
-            # TODO: evitare di ritornare None e lanciare un'eccezione, aggiorna documentazione di conseguenza
             return None
 
     def does_profile_exists(self, username: str) -> bool:

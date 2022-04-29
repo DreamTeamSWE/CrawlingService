@@ -37,7 +37,6 @@ class ProfilesRepository:
         return self.__db.do_write_query(query, paramset)
 
     def get_profile_for_crawling_level_1(self):
-        # TODO: da sistemare, capire come evitare dirty read
         query = 'select * from profilo_instagram where level = 1 order by data_ultimo_check, username limit 1'
         response = self.__db.do_read_query(query)
         profile = response[0]['username']
