@@ -103,9 +103,9 @@ class Facade:
         Facade method to start the crawling process, it will crawl the profile in the database that has not been crawled
         for the longest time.
         """
-        self.__crawler.login_from_cookies()  # TODO: #2 gestire errori login
         profile_for_crawling = ProfileFactory().build_from_db(self.__profile_repository.get_profile_for_crawling_level_1()[0])
         amount_to_crawl = self.__get_amount_to_crawl(profile_for_crawling)
+        self.__crawler.login_from_cookies()  # TODO: #2 gestire errori login
         medias = self.__crawler.get_media(profile_for_crawling.get_username(), amount_to_crawl)
         useful_post = 0
         for media in medias:

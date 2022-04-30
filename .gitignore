@@ -26,4 +26,4 @@ var/
 .serverless
 
 #prove
-test.py
+prove.py
