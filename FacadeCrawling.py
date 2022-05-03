@@ -11,7 +11,7 @@ from datetime import datetime
 import logging
 
 
-class Facade:
+class FacadeCrawling:
     def __init__(self) -> None:
         self.__crawler = Crawler()
         self.__repository = InternalRepository()
@@ -72,6 +72,7 @@ class Facade:
                 return False
         else:
             instagrapi_location = self.__crawler.get_detailed_location(location_name, location_lat, location_lng)
+
             if instagrapi_location is None:
                 self.__print_media_log('fbsearch cannot find location')
                 return False
@@ -100,7 +101,7 @@ class Facade:
 
     def start_crawling(self) -> None:
         """
-        Facade method to start the crawling process, it will crawl the profile in the database that has not been crawled
+        FacadeCrawling method to start the crawling process, it will crawl the profile in the database that has not been crawled
         for the longest time.
         """
         profile_for_crawling = ProfileFactory().build_from_db(self.__profile_repository.get_profile_for_crawling_level_1()[0])

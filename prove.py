@@ -31,9 +31,9 @@ def prove():
     #         db.insert_profile(username)
     #     else:
     #         logging.info(f'{i}: profile already exists: ' + username)
-    # crawler = Crawler()
-    # crawler.login_from_account('sognoteamswe9', 'dreamteam')
-    # crawler.save_cookies()
+    crawler = Crawler()
+    crawler.login_from_account('collinaterenzio', 'dreamteam')
+    crawler.save_cookies()
 
     # import random
     # for i in range(120):
@@ -41,12 +41,12 @@ def prove():
     #     if x == 1:
     #         print(f'ok: {i}')
 
-    import requests
-    api_key = 'bot5387718013:AAElCJj5EsTYSE3-ONQytxqi9dkiEtwg2XY'
-    chat_id = '-1001639546628'
-    message = 'messaggio da python'
-    for i in range (10):
-        requests.get(f'https://api.telegram.org/{api_key}/sendMessage?chat_id={chat_id}&text={message}')
+    # import requests
+    # api_key = 'bot5387718013:AAElCJj5EsTYSE3-ONQytxqi9dkiEtwg2XY'
+    # chat_id = '-1001639546628'
+    # message = 'messaggio da python'
+    # for i in range (10):
+    #     requests.get(f'https://api.telegram.org/{api_key}/sendMessage?chat_id={chat_id}&text={message}')
 
 
 if __name__ == '__main__':
@@ -55,3 +55,7 @@ if __name__ == '__main__':
     # os.system('coverage html')
     # os.system('.\\htmlcov\\index.html')
 
+# pk di location per ampliare la lista di profili:
+# 421466361633680, 924131387704434, 995099735, 274377569, 235118921, 106055111151602, 292435251595163, 1402084993153509,
+# 100105881340388, 157421679, 379776280, 1635966796508958, 269768445, 108997440934705, 111472130189318, 715292428841704,
+# 240192888, 100316634751956, 308894999781307, 110576520640631, 636580735, 2034385343520246
