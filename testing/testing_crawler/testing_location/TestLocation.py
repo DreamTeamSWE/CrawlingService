@@ -37,7 +37,7 @@ class TestLocation(unittest.TestCase):
         self.assertEqual(self.location.get_db_id(), 2)
 
     def test_to_dict(self):
-        self.assertEqual(self.location.to_dict(), {'location_name': 'location_name', 'lat': 43.3, 'lng': 12.2134, 'category': 'fast food', 'phone': '1234567890', 'website': 'http://www.google.com'})
+        self.assertEqual(self.location.to_dict(), {'location_name': 'location_name', 'lat': 43.3, 'lng': 12.2134, 'category': 'fast food', 'phone': '1234567890', 'website': 'http://www.google.com', 'db_id': 1})
 
 
 if __name__ == '__main__':
