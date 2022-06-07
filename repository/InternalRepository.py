@@ -11,8 +11,8 @@ import io
 
 class InternalRepository:
 
-    def __init__(self) -> None:
-        self.__db = DatabaseHandler('crawler_test')
+    def __init__(self, db_name: str = 'crawler_test') -> None:
+        self.__db = DatabaseHandler(db_name)
 
     @staticmethod
     def __save_img_s3(img_url: str, id_img: int) -> None:

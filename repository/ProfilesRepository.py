@@ -4,8 +4,8 @@ from repository.DatabaseHandler import DatabaseHandler
 
 
 class ProfilesRepository:
-    def __init__(self) -> None:
-        self.__db = DatabaseHandler('crawler_test')
+    def __init__(self, db_name: str = 'crawler_test') -> None:
+        self.__db = DatabaseHandler(db_name)
 
     def __update_last_time_check(self, username: str):
         """
