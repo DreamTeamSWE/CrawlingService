@@ -3,7 +3,7 @@ import time
 import logging
 
 
-def main():
+def main(event, context):
     logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
     start = time.time()
 

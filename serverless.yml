@@ -43,6 +43,8 @@ functions:
           - "arn:aws:s3:::${self:custom.bucketNameImage}/*"
           - "arn:aws:s3:::${self:custom.bucketNameEmoji}"
           - "arn:aws:s3:::${self:custom.bucketNameEmoji}/*"
+          - "arn:aws:s3:::${self:custom.bucketNameCookie}"
+          - "arn:aws:s3:::${self:custom.bucketNameCookie}/*"
       - Effect: Allow
         Action:
           - 'rds-data:ExecuteStatement'
@@ -64,8 +66,9 @@ plugins:
 custom:
   bucketNameImage: dream-team-img-test
   bucketNameEmoji: sweet-emoji-sentiment-scores
+  bucketNameCookie: sweeat-crawler-cookies
   secretRds: SecreteRDS-RxX4ZE
-  sercetCredentials: secretCrawler-baUpJG
+  sercetCredentials: rds-db-credentials/cluster-AQLMTHUP2LEAFVXYXDMZFEHDR4/admin-5WXjei
   clusterRds: sweeat
   pythonRequirements:
     dockerizePip: false
