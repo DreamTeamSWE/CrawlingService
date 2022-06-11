@@ -1,0 +1,71 @@
+service: crawling-service
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: python3.9
+  region: eu-central-1
+package:
+  individually: true
+  exclude:
+    - node_modules/**
+    - venv/**
+    - query_db/**
+    - .git/**
+    - .gitignore
+    - Database/**
+    - test.py
+    - testing/**
+    - htmlcov/**
+
+functions:
+  crawler:
+    handler: main.main
+    timeout: 900
+    package:
+      exclude:
+        - 'prove.py'
+        - 'reivio-sqs.py'
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - 'secretsmanager:GetSecretValue'
+        Resource:
+          - 'arn:aws:secretsmanager:eu-central-1:123446374287:secret:${self:custom.secretRds}'
+          - 'arn:aws:secretsmanager:eu-central-1:123446374287:secret:${self:custom.sercetCredentials}'
+      - Effect: Allow
+        Action:
+          - 's3:GetObject'
+          - 's3:PutObject'
+        Resource:
+          - "arn:aws:s3:::${self:custom.bucketNameImage}"
+          - "arn:aws:s3:::${self:custom.bucketNameImage}/*"
+          - "arn:aws:s3:::${self:custom.bucketNameEmoji}"
+          - "arn:aws:s3:::${self:custom.bucketNameEmoji}/*"
+      - Effect: Allow
+        Action:
+          - 'rds-data:ExecuteStatement'
+          - 'rds-data:BeginTransaction'
+          - 'rds-data:CommitTransaction'
+          - 'rds-data:BatchExecuteStatement'
+        Resource: 'arn:aws:rds:eu-central-1:123446374287:cluster:${self:custom.clusterRds}'
+    events:
+      - sqs:
+          arn: arn:aws:sqs:eu-central-1:123446374287:coda-crawler.fifo
+          batchSize: 10
+          functionResponseType: ReportBatchItemFailures
+
+
+plugins:
+  - serverless-iam-roles-per-function
+  - serverless-python-requirements
+
+custom:
+  bucketNameImage: dream-team-img-test
+  bucketNameEmoji: sweet-emoji-sentiment-scores
+  secretRds: SecreteRDS-RxX4ZE
+  sercetCredentials: secretCrawler-baUpJG
+  clusterRds: sweeat
+  pythonRequirements:
+    dockerizePip: false

@@ -1,18 +1,56 @@
-import boto3
-import time
+import base64
+import json
 import logging
+import time
+
+import boto3
 from botocore.exceptions import ClientError
 
 
 class DatabaseHandler:
+    __AWS_REGION = 'eu-central-1'
 
+    # def __init__(self, database: str) -> None:
+    #     self.__rdsData = boto3.client('rds-data')
+    #     self.__cluster_arn = 'arn:aws:rds:eu-central-1:123446374287:cluster:sweeat'
+    #     self.__secret_arn = 'arn:aws:secretsmanager:eu-central-1:123446374287:secret:rds-db-credentials/cluster' \
+    #                         '-AQLMTHUP2LEAFVXYXDMZFEHDR4/admin-5WXjei'
+    #     self.__database = database
+    #     self.__wait_for_db_on()
     def __init__(self, database: str) -> None:
-        self.__rdsData = boto3.client('rds-data')
-        self.__cluster_arn = 'arn:aws:rds:eu-central-1:123446374287:cluster:sweeat'
+        print('Initializing database handler')
+
+        secret_name = "SecreteRDS"
+
+        # Create a Secrets Manager client
+        session = boto3.session.Session()
+        client = session.client(service_name='secretsmanager', region_name=self.__AWS_REGION)
+
+        get_secret_value_response = client.get_secret_value(
+            SecretId=secret_name
+        )
+        # Decrypts secret using the associated KMS key.
+        # Depending on whether the secret is a string or binary, one of these fields will be populated.
+        if 'SecretString' in get_secret_value_response:
+            secret = get_secret_value_response['SecretString']
+        else:
+            secret = base64.b64decode(get_secret_value_response['SecretBinary'])
+
+        json_secret = json.loads(secret)
+        secret_value = json_secret['cluster_arn']
+
+        print("get secret value")
+
+        self.__database = database
+        self.__cluster_arn = secret_value
         self.__secret_arn = 'arn:aws:secretsmanager:eu-central-1:123446374287:secret:rds-db-credentials/cluster' \
                             '-AQLMTHUP2LEAFVXYXDMZFEHDR4/admin-5WXjei'
-        self.__database = database
+
+        self.__rdsData = boto3.client('rds-data', region_name=self.__AWS_REGION)
+
         self.__wait_for_db_on()
+
+        print('END Initializing database handler')
 
     # chehck if db is turned on
     def __is_db_on(self, delay) -> bool:
