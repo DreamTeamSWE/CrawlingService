@@ -17,12 +17,12 @@ def prove():
     # # pk=298711932, name='Piazza Duomo'
     logging.info('login from cookies...')
     s3 = boto3.client(service_name='s3')
-    content_object = s3.get_object(Bucket='sweeat-crawler-cookies', Key='sognoteamswe9.txt')
+    content_object = s3.get_object(Bucket='sweeat-crawler-cookies', Key='tommolocas.txt')
     file_content = content_object['Body'].read().decode('utf-8')
     json_content = json.loads(file_content)
     cl = instagrapi.Client(json_content)
     logging.info('login successful!')
-    medias = cl.location_medias_recent(995099735, 48)
+    medias = cl.location_medias_recent(106055111151602, 48)
     db = ProfilesRepository()
     for i, media in enumerate(medias):
         username = media.user.username
@@ -56,6 +56,6 @@ if __name__ == '__main__':
     # os.system('.\\htmlcov\\index.html')
 
 # pk di location per ampliare la lista di profili:
-# , , , 274377569, 235118921, 106055111151602, 292435251595163, 1402084993153509,
+# , , , , , , 292435251595163, 1402084993153509,
 # 100105881340388, 157421679, 379776280, 1635966796508958, 269768445, 108997440934705, 111472130189318, 715292428841704,
 # 240192888, 100316634751956, 308894999781307, 110576520640631, 636580735, 2034385343520246

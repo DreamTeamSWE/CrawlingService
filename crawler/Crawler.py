@@ -52,8 +52,9 @@ class Crawler:
         logging.info('login from cookies...')
         s3 = boto3.client(service_name='s3')
 
-        x = random.randint(1, 2)
-        account_name = {1: 'collinaterenzio.txt', 2: 'sognoteamswe9.txt'}
+        # x = random.randint(1, 2)
+        x = 3
+        account_name = {1: 'collinaterenzio.txt', 2: 'sognoteamswe9.txt', 3:'tommolocas.txt'}
         content_object = s3.get_object(Bucket='sweeat-crawler-cookies', Key=account_name[x])
 
         file_content = content_object['Body'].read().decode('utf-8')
